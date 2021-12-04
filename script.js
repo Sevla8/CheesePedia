@@ -8,7 +8,7 @@ if (urlParams.has('id')) {
 
 // Search a cheese by its name
 function search() {
-	let input = document.getElementById("searchTxt").value;
+	let input = document.getElementById("searchInput").value;
 	let contenu_requete = `
 		SELECT *
 		WHERE {
