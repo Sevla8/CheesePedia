@@ -10,17 +10,21 @@ if (urlParams.has('id')) {
 function search() {
 	let input = document.getElementById("searchInput").value;
 	let contenu_requete = `
-		SELECT *
+		SELECT ?name, ?country, ?source, ?texture, ?image, ?wikiPageID
 		WHERE {
 			?cheese a dbo:Cheese ;
 					dbp:name ?name ;
 					dbo:thumbnail ?image ;
 					dbp:country ?country ;
 					dbp:source ?source ;
+					dbp:texture ?texture ;
+					dbo:abstract ?abstract ;
 					dbo:wikiPageID ?wikiPageID .
 			FILTER(
 				langMatches(lang(?name),"EN") &&
-				REGEX(?name, "${input}", "i")
+				REGEX(?name, "${input}", "i") &&
+				langMatches(lang(?abstract),"EN") &&
+				REGEX(?abstract ,"cheese", "i")
 			)
 		}
 		ORDER BY ASC(?name)
@@ -53,6 +57,7 @@ function displayResults(data) {
 		result += '<h3 class="name">' + it.name.value + '</h3>';
 		result += '<p class="country"><em>Country: </em>' + parse(it.country.value) + '</p>';
 		result += '<p class="source"><em>Source: </em>' + parse(it.source.value) + '</p>';
+		result += '<p class="texture"><em>Texture: </em>' + parse(it.texture.value) + '</p>';
 		result += '<p class="image"><img src="' + it.image.value + '" alt="' + it.name.value + '"></p>';
 		result += '<p><a href=index.html?id=' + it.wikiPageID.value + '>More details</a></p>';
 		result += '</div>';
@@ -67,27 +72,30 @@ function searchCheese(cheese) {
 		SELECT *
 		WHERE {
 			?cheese a dbo:Cheese ;
-					dbo:abstract ?abstract ;
 					dbp:name ?name ;
 					dbo:thumbnail ?image ;
 					dbp:country ?country ;
 					dbp:source ?source ;
-					dbp:pasteurised ?pasteurised ;
 					dbp:texture ?texture ;
-					dbp:certification ?certification ;
-					dbp:aging ?aging ;
+					dbo:abstract ?abstract ;
 					dbo:wikiPageID ?wikiPageID .
 			FILTER(
 				?wikiPageID = ${cheese} &&
-				langMatches(lang(?abstract),"EN") &&
 				langMatches(lang(?name),"EN") &&
-				langMatches(lang(?source),"EN") &&
-				langMatches(lang(?pasteurised),"EN") &&
-				langMatches(lang(?texture),"EN") &&
-				langMatches(lang(?certification),"EN") &&
-				langMatches(lang(?texture),"EN") &&
+				langMatches(lang(?abstract),"EN") &&
 				REGEX(?abstract ,"cheese", "i")
 			)
+			optional {
+				?cheese dbo:pasteurised ?pasteurised ;
+						dbp:aging ?aging ;
+						dbp:certification ?certification ;
+						dbp:regiontown ?regiontown .
+				FILTER(
+					langMatches(lang(?certification),"EN") &&
+					langMatches(lang(?pasteurised),"EN") &&
+					langMatches(lang(?regiontown),"EN")
+				)
+			}
 		}
 		ORDER BY ASC(?name)
 	`;
@@ -117,21 +125,20 @@ function displayCheese(data) {
 	data.results.bindings.forEach((it) => {
 		result += '<div id="' + it.wikiPageID.value + '">';
 		result += '<h3 class="name">' + it.name.value + '</h3>';
-		result += '<p class="abstract">' + it.abstract.value + '</p>';
 		result += '<p class="country"><em>Country: </em>' + parse(it.country.value) + '</p>';
 		result += '<p class="source"><em>Source: </em>' + parse(it.source.value) + '</p>';
+		result += '<p class="texture"><em>Texture: </em>' + parse(it.texture.value) + '</p>';
 		result += '<p class="image"><img src="' + it.image.value + '" alt="' + it.name.value + '"></p>';
-		result += '<p class="pasteurised"><em>Pasteurised: </em>' + it.pasteurised.value + '</p>';
-		result += '<p class="texture"><em>Texture: </em>' + it.texture.value + '</p>';
-		result += '<p class="certification"><em>Certification: </em>' + it.certification.value + '</p>';
-		result += '<p class="aging"><em>Aging: </em>' + it.aging.value + '</p>';
+		if (it.pasteurised) result += '<p class="pasteurised"><em>Pasteurised: </em>' + it.pasteurised.value + '</p>';
+		if (it.certification) result += '<p class="certification"><em>Certification: </em>' + it.certification.value + '</p>';
+		if (it.value) result += '<p class="aging"><em>Aging: </em>' + it.aging.value + '</p>';
 		result += '</div>';
 	});
 
 	document.getElementById("results").innerHTML = result;
 }
 
-// Return word of the text after the last '/'
+// Parse text
 function parse(text) {
 	if (text.includes('/')) {
 		text = text.substring(text.lastIndexOf('/') + 1);
