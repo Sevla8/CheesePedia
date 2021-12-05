@@ -1,5 +1,6 @@
-select ?f where {
+select ?f ?image where {
 ?f a dbo:Cheese.
 ?f dbo:abstract ?a.
 FILTER(langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese")).
+OPTIONAL{?f dbo:thumbnail ?image}.
 }
