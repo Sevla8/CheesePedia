@@ -1,31 +1,49 @@
 <!-- Page d'accueil -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="Style.css">
 </head>
 
 <body>
+<div id="main-container">
+	<div id="main-block">
+		<img id="cheeseek" src="ressources/cheeseek.png" alt="logo">
 
-<h1>Cheesepedia</h1>
+		<div class="searchBar">
+		  <input type="text" id="searchTxt" placeholder="Search..">
+		  <!--<button type="button" onClick="search()">Rechercher</button>-->
+		  <img id="loupeLogo" src="ressources/loupe.png" onclick="search()">
+		</div>
 
-<div class="searchBar">
-  <input type="text" id="searchTxt" placeholder="Search..">
-  <button type="button" onClick="search()">Rechercher</button>
+		<br/>
+		  <select name="filters" id="filters" >
+			<option value="" disabled selected>Country</option>
+			<option label=" "></option>
+			<option value="Denmark">Denmark</option>
+			<option value="France">France</option>
+			<option value="Italia">Italy</option>
+		  </select>
+		  <select name="filters" id="filters" >
+			<option value="" disabled selected>Milk</option>
+			<option label=" "></option>
+			<option value="Brebis">Brebis</option>
+			<option value="Chèvre">Chèvre</option>
+			<option value="Vache">Vache</option>
+		  </select>
+		  <select name="filters" id="filters" >
+			<option value="" disabled selected>Pasteurised</option>
+			<option label=" "></option>
+			<option value="1">Yes</option>
+			<option value="2">No</option>
+
+		  </select>
+	</div>
 </div>
-
-<br/>
-<label for="filters">Filters: </label>
-  <select name="filters" id="filters">
-    <option label=" "></option>
-	<option value="country">Country</option>
-	<option value="source">Source</option>
-    <option value="other">Other</option>
-  </select>
-
 <script src="script.js"></script>
 
 </body>
