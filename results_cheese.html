@@ -6,12 +6,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="Style.css">
 </head>
 
 <body>
+	<div id="header">
+		<div id="search-img">
+			<img id="search-cheeseek" src="ressources/cheeseek.png" alt="logo">
+		</div>
+		
+		<div id="search-div">
+			<div class="search-searchBar">
+			  <input type="text" id="searchTxt2" placeholder="Search..">
+			  <!--<button type="button" onClick="search()">Rechercher</button>-->
+			  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()">
+			</div>
+		</div>
+		<div id="search-filt">
+			<select name="filters" id="filters" >
+				<option value="" disabled selected>Country</option>
+				<option label=" "></option>
+				<option value="country">Country</option>
+				<option value="source">Source</option>
+				<option value="other">Other</option>
+			</select>
+			<select name="filters" id="filters" >
+				<option value="" disabled selected>Milk</option>
+				<option label=" "></option>
+				<option value="country">Country</option>
+				<option value="source">Source</option>
+				<option value="other">Other</option>
+			</select>
+			<select name="filters" id="filters" >
+				<option value="" disabled selected>Pasteurised</option>
+				<option label=" "></option>
+				<option value="1">Yes</option>
+				<option value="2">No</option>
+			</select>
+		</div>
+	</div>
+	<div id="res-container">
+		<table id="resultat">
+		</table>
 
-<table id="resultat">
-</table>
+	</div>
 
 <button type="button" onClick="showAll()">TEST</button>
 

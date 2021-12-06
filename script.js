@@ -42,7 +42,7 @@ function afficherResultats(data){
 	// pour vos applications, c'est juste pour la démo sous forme de tableau
 	var index = [];
 
-	var contenuTableau = "<tr>";
+	var contenuTableau = "<tr class='table-row'>";
 
 	data.head.vars.forEach((v, i) => {
 		
@@ -51,17 +51,15 @@ function afficherResultats(data){
 	});
 
 	data.results.bindings.forEach(r => {
-	  contenuTableau += "<tr>";
+	  contenuTableau += "<tr class='table-row'>";
 
 	  index.forEach(v => {
-
 		if (r[v].type === "uri")
 		{
-		  contenuTableau += 
-		  "<td><img src='" + r[v].value + "' target='_blank'></img></td>";
+		  contenuTableau += "<img src='" + r[v].value + "' target='_blank'></img></td>";
 		}
 		else {
-		  contenuTableau += "<td>" + r[v].value + "</td>";
+		  contenuTableau += "<td class='table-cell'>" +r[v].value ;
 		}
 	  });
 
