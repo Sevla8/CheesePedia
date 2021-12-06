@@ -49,22 +49,26 @@ function afficherResultats(data){
 		//contenuTableau += "<th>" + v + "</th>";
 		index.push(v);
 	});
-
+	var ind = 0;
 	data.results.bindings.forEach(r => {
-	  contenuTableau += "<tr class='table-row'>";
-
+		if (ind % 4 == 0){
+			contenuTableau += "<tr class='table-row'>";
+		}
+	  
+	  	console.log(ind % 4);
 	  index.forEach(v => {
 		if (r[v].type === "uri")
 		{
-		  contenuTableau += "<img src='" + r[v].value + "' target='_blank'></img></td>";
+		  contenuTableau += "<img class='img-result' src='" + r[v].value + "' onerror=\"this.onerror=null; this.src='ressources/defaultImg.png'\" target='_blank'></img></div></td>";
 		}
 		else {
-		  contenuTableau += "<td class='table-cell'>" +r[v].value ;
+		  contenuTableau += "<td class='table-cell'><div class='cell-content'><p class='cheese-name'>" +r[v].value +"</p>" ;
 		}
 	  }); 
-
-
-	  contenuTableau += "</tr>";
+	  if (ind % 4 == 3){
+	  	contenuTableau += "</tr>";
+	  }
+	  ind = ind + 1;
 	});
 
 
