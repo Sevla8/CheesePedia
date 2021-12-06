@@ -61,7 +61,7 @@ function afficherResultats(data){
 		else {
 		  contenuTableau += "<td class='table-cell'>" +r[v].value ;
 		}
-	  });
+	  }); 
 
 
 	  contenuTableau += "</tr>";
