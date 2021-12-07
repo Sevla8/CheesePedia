@@ -108,6 +108,10 @@ body {
 	width: 60%;
 	margin: 5%;
 }
+#cheeseek:hover{
+	animation: bounce; /* referring directly to the animation's @keyframe declaration */
+	animation-duration: 2s; /* don't forget to set a duration! */
+}
 #resultat{
 	display: table;
 	border-spacing: 40px 40px;
@@ -192,6 +196,8 @@ body {
 .cell-content:hover{
 	filter:brightness(80%);
 	-webkit-transition: 500ms;
+	animation: pulse;
+	animation-duration: 2s;
 }
 .table-cell{
 	display: table-cell;
