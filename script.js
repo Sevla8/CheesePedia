@@ -155,9 +155,19 @@ function afficherResultats(data){
 
 }
 
-function detail(){
-  location.href = "./detail.html" ;
-  var contenu_requete = `select ?f  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC 
+
+function loadDetail(){
+	
+  const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('cheese')) {
+		var inputLabel = decodeURIComponent(urlParams.get('cheese'));
+		
+		inputLabel = "\""+inputLabel+"\"@en";
+		console.log('Detail of cheese:', inputLabel);
+	}
+  
+	var contenu_requete = `select ?f sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC 
 						  sum(if(regex(?c,"AOP"),1,0)) as ?AOP
 						  sum(if(regex(?c,"P.*D.*O"),1,0)) as ?PDO 
 						  sum(if(regex(?c,"D.*O.*C"),1,0)) as ?DOC 
@@ -198,15 +208,155 @@ function detail(){
 						OPTIONAL{?f dbp:texture ?t}.
 
 
-						FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n="${label}").
+						FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n=${inputLabel}).
 						}
 						GROUP BY ?f
   `;
   
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            afficherDetails(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
   
   
 }
 
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function afficherDetails(data){
+	console.log('Detail from https://dbpedia.org/:', data);
+
+
+	data.results.bindings.forEach((cheese) => {
+
+		var certification="";
+		if (cheese.AOC.value==1) {
+			certification += "AOC, ";
+		}
+		if (cheese.AOP.value==1) {
+			certification += "AOP, ";
+		}
+		if (cheese.PDO.value==1) {
+			certification += "PDO, ";
+		}
+		if (cheese.DOC.value==1) {
+			certification += "DOC, ";
+		}
+		if (certification==""){
+			certification="-";
+		}else{
+			certification = certification.substring(0, certification.length - 2);
+		}
+		
+		var milk="";
+		if(cheese.Goat.value==1){
+			milk += "Goat, ";
+		}
+		if(cheese.Cow.value==1){
+			milk += "Cow, ";
+		}
+		if(cheese.Sheep.value==1){
+			milk += "Sheep, ";
+		}
+		if(cheese.Buffalo.value==1){
+			milk += "Buffalo, ";
+		}
+		if(cheese.Donkeys.value==1){
+			milk += "Donkeys, ";
+		}
+		if(cheese.Yak.value==1){
+			milk += "Yak, ";
+		}
+		if(cheese.Moose.value==1){
+			milk += "Moose, ";
+		}
+		if (milk==""){
+			milk="-";
+		}else{
+			milk = milk.substring(0, milk.length - 2);
+		}
+		
+		var pasteurized=""
+		if(cheese.Pasteurized.value==1){
+			pasteurized = "Yes";
+		}else{
+			pasteurized = "No";
+		}
+		
+		
+		var texture="";
+		if(cheese.SFirm.value==1){
+			texture += "SFirm, ";
+		}
+		if(cheese.SHard.value==1){
+			texture += "SHard, ";
+		}
+		if(cheese.SSoft.value==1){
+			texture += "SSoft, ";
+		}
+		if(cheese.Firm.value==1){
+			texture += "Firm, ";
+		}
+		if(cheese.Soft.value==1){
+			texture += "Soft, ";
+		}
+		if(cheese.Hard.value==1){
+			texture += "Hard, ";
+		}
+		if(cheese.Crumbly.value==1){
+			texture += "Crumbly, ";
+		}
+		if(cheese.Creamy.value==1){
+			texture += "Creamy, ";
+		}
+		if(cheese.Dense.value==1){
+			texture += "Dense, ";
+		}
+		if(cheese.Compact.value==1){
+			texture += "Compact, ";
+		}
+		if(cheese.Granular.value==1){
+			texture += "Granular, ";
+		}
+		if(cheese.Moist.value==1){
+			texture += "Moist, ";
+		}
+		if(cheese.Elastic.value==1){
+			texture += "Elastic, ";
+		}
+		if(cheese.Stringy.value==1){
+			texture += "Stringy, ";
+		}
+		if(cheese.Smooth.value==1){
+			texture += "Smooth, ";
+		}
+		if (texture==""){
+			texture="-";
+		}else{
+			texture = texture.substring(0, texture.length - 2);
+		}
+		
+		document.getElementById("certification").innerHTML = certification;
+		document.getElementById("milk").innerHTML = milk;
+		document.getElementById("pasteurized").innerHTML = pasteurized;
+		document.getElementById("texture").innerHTML = texture;
+		/*document.getElementById("name").innerHTML = cheese.n.value;
+		document.getElementById("country").innerHTML = cheese.country.value;*/
+		
+
+	});
+
+
 }
