@@ -256,13 +256,20 @@ function afficherResultats(data){
 	// Tableau pour mémoriser l'ordre des variables ; sans doute pas nécessaire
 	// pour vos applications, c'est juste pour la démo sous forme de tableau
 	var index = [];
+<<<<<<< HEAD
 	var contenuTableau = "<tr class='table-row'>";
+=======
+
+	var contenuTableau = "<tr>";
+
+>>>>>>> parent of 3df8dea (Merge branch 'main' of https://github.com/JuviaBerry/Cheese-pedia)
 	data.head.vars.forEach((v, i) => {
 
 		//contenuTableau += "<th>" + v + "</th>";
 		index.push(v);
 	});
 
+<<<<<<< HEAD
 	var ind = 0;
 	data.results.bindings.forEach(r => {
 	  contenuTableau += "<tr class='table-row'>";
@@ -272,24 +279,41 @@ function afficherResultats(data){
 		}
 
 	  	console.log(ind % 4);
+=======
+	data.results.bindings.forEach(r => {
+	  contenuTableau += "<tr>";
+
+>>>>>>> parent of 3df8dea (Merge branch 'main' of https://github.com/JuviaBerry/Cheese-pedia)
 	  index.forEach(v => {
+
 		if (r[v].type === "uri")
 		{
+<<<<<<< HEAD
 		  contenuTableau += "<img src='" + r[v].value + "' target='_blank'></img></td>";
 		  contenuTableau += "<img class='img-result' src='" + r[v].value + "' onerror=\"this.onerror=null; this.src='ressources/defaultImg.png'\" target='_blank'></img></div></td>";
 		}
 		else {
 		  contenuTableau += "<td class='table-cell'>" +r[v].value ;
 		  contenuTableau += "<td class='table-cell'><div class='cell-content'><p class='cheese-name'>" +r[v].value +"</p>" ;
+=======
+		  contenuTableau += 
+		  "<td><img src='" + r[v].value + "' target='_blank'></img></td>";
+		}
+		else {
+		  contenuTableau += "<td>" + r[v].value + "</td>";
+>>>>>>> parent of 3df8dea (Merge branch 'main' of https://github.com/JuviaBerry/Cheese-pedia)
 		}
 	  });
 
 
 	  contenuTableau += "</tr>";
+<<<<<<< HEAD
 	  if (ind % 4 == 3){
 	  	contenuTableau += "</tr>";
 	  }
 	  ind = ind + 1;
+=======
+>>>>>>> parent of 3df8dea (Merge branch 'main' of https://github.com/JuviaBerry/Cheese-pedia)
 	});
 
 
