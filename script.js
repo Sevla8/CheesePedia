@@ -7,7 +7,10 @@ function search(){
 	let countryTxt = document.getElementById("countryFilter").value;
 	countryTxt = encodeURIComponent(countryTxt);
 
-	location.href = `./results_cheese.html?search=${searchTxt}&country=${countryTxt}` ;
+	let pasteurizedTxt = document.getElementById("pasteurizedFilter").value;
+	countryTxt = encodeURIComponent(pasteurizedTxt);
+
+	location.href = `./results_cheese.html?search=${searchTxt}&country=${countryTxt}&pasteurized=${pasteurizedTxt}`; ;
 }
 
 function enter(elem){
