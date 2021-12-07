@@ -64,7 +64,7 @@ function searchCheeses() {
 					langMatches(lang(?label),"EN") &&
 					langMatches(lang(?abstract),"EN") &&
 					REGEX(?abstract ,"cheese", "i") &&
-					REGEX(?label, "${input}", "i")
+					REGEX(?label, "${inputLabel}", "i")
 				)
 				OPTIONAL {
 					?cheese dbo:thumbnail ?thumbnail .
