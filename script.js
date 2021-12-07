@@ -1,13 +1,10 @@
-//JAVASCRIPT FILE 
-
-//TEST
-function myFunction() {
-  document.getElementById("demo").innerHTML = "test";
-}
+//JAVASCRIPT FILE
 
 function search(){
-  searchTxt = document.getElementById("searchTxt").value;
-  location.href = "./results_cheese.html" ;
+
+ let searchTxt = document.getElementById("searchTxt").value;
+  searchTxt = encodeURIComponent(searchTxt);
+  location.href = `./results_cheese.html?search=${searchTxt}` ;
 }
 
 function enter(elem){
@@ -15,16 +12,34 @@ function enter(elem){
 		searchTxt = document.getElementById("searchTxt").value;
   		location.href = "./results_cheese.html" ;
 	}
-}
 
 //Affichage de la liste des fromages (inspiré du code moodle)
-function showAll(){
-	
-	var contenu_requete = `select ?n,?i where{
-		?f a dbo:Cheese.
-		?f dbp:name ?n.
-		?f dbo:thumbnail ?i.
-	}`;
+function searchCheeses() {
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('search')) {
+		var input = decodeURIComponent(urlParams.get('search'));
+		console.log('Search:', input);
+	}
+
+	var contenu_requete = `
+		SELECT ?label ?thumbnail
+		WHERE {
+			?cheese a dbo:Cheese ;
+					dbo:abstract ?abstract ;
+					rdfs:label ?label .
+			FILTER(
+				langMatches(lang(?label),"EN") &&
+				langMatches(lang(?abstract),"EN") &&
+				REGEX(?abstract ,"cheese", "i") &&
+				REGEX(?label, "${input}", "i")
+			)
+			OPTIONAL {
+				?cheese dbo:thumbnail ?thumbnail .
+			}
+		}
+		ORDER BY ASC(?label)
+	`;
 
     // Encodage de l'URL à transmettre à DBPedia
     var url_base = "http://dbpedia.org/sparql";
@@ -44,43 +59,56 @@ function showAll(){
 
 // Affichage des résultats dans un tableau (inspiré du code moodle)
 function afficherResultats(data){
-	// Tableau pour mémoriser l'ordre des variables ; sans doute pas nécessaire
-	// pour vos applications, c'est juste pour la démo sous forme de tableau
-	var index = [];
+	console.log('Results from https://dbpedia.org/:', data);
 
-	var contenuTableau = "<tr class='table-row'>";
+	let i = 0;
 
-	data.head.vars.forEach((v, i) => {
-		
-		//contenuTableau += "<th>" + v + "</th>";
-		index.push(v);
+	let result = "<tr class='table-row'>";
+	data.results.bindings.forEach((cheese) => {
+		result += '<td class="table-cell cell-content" id="' + cheese.label.value + '">';
+
+		result += '<h3 class="name">' + cheese.label.value + '</h3>';
+
+		if (cheese.country) result += '<p class="country"><em>Country: </em>' + cheese.country.value + '</p>';
+
+		if(cheese.sources){
+			result += '<p class="source"><em>Source: </em><ul>';
+			let sources = cheese.sources.value.split(', ');
+			sources.forEach((source) => {
+				if (source) result += '<li>' + capitalizeFirstLetter(source) + '</li>';
+			});
+			result += '</ul></p>';
+		}
+
+		if(cheese.texture){
+			result += '<p class="texture"><em>Texture: </em><ul>';
+			let textures = cheese.textures.value.split(', ');
+			textures.forEach((texture) => {
+				if (texture) result += '<li>' + capitalizeFirstLetter(texture) + '</li>';
+			});
+			result += '</ul></p>';
+		}
+
+		if(cheese.thumbnail){
+			result += '<p class="thumbnail"><img class="img-result" src="' + cheese.thumbnail.value + '" alt="' + cheese.label.value + ' onerror=\"this.onerror=null; this.src="ressources/defaultImg.png"\" target="_blank"></p>';
+		}
+
+
+
+		result += '<p><a href=index.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
+
+		result += '</td>';
+
+		++i;
+
+		if (i == 4) {
+		result += "</r><tr class='table-row'>";
+		i = 0;
+		}
 	});
-	var ind = 0;
-	data.results.bindings.forEach(r => {
-		if (ind % 4 == 0){
-			contenuTableau += "<tr class='table-row'>";
-		}
-	  
-	  	console.log(ind % 4);
-	  index.forEach(v => {
-		if (r[v].type === "uri")
-		{
-		  contenuTableau += "<img class='img-result' src='" + r[v].value + "' onerror=\"this.onerror=null; this.src='ressources/defaultImg.png'\" target='_blank'></img></div></td>";
-		}
-		else {
-		  contenuTableau += "<td class='table-cell'><div class='cell-content'><p class='cheese-name'>" +r[v].value +"</p>" ;
-		}
-	  }); 
-	  if (ind % 4 == 3){
-	  	contenuTableau += "</tr>";
-	  }
-	  ind = ind + 1;
-	});
+	result += "</tr>";
 
-
-	contenuTableau += "</tr>";
-
-	document.getElementById("resultat").innerHTML = contenuTableau;
+	document.getElementById("resultat").innerHTML = result;
 
 }
 
@@ -88,3 +116,6 @@ function detail(){
   location.href = "./detail.html" ;
 }
 
+function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}

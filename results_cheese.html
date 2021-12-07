@@ -10,54 +10,51 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 
-<body>
+<body onload="searchCheeses();">
 	<div id="header">
 		<div id="search-img">
 			<a href="index.html">
 				<img id="search-cheeseek" src="ressources/cheeseek.png" alt="logo">
 			</a>
 		</div>
-		
-		<div id="search-div">
-			<div class="search-searchBar">
-			  <input type="text" id="searchTxt2" placeholder="Search..">
-			  <!--<button type="button" onClick="search()">Rechercher</button>-->
-			  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()">
-			</div>
-		</div>
-		<div id="search-filt">
-			<select name="filters" id="filters" >
-				<option value="" disabled selected>Country</option>
-				<option label=" "></option>
-				<option value="Denmark">Denmark</option>
-				<option value="France">France</option>
-				<option value="Italia">Italy</option>
-			</select>
-			<select name="filters" id="filters" >
-				<option value="" disabled selected>Milk</option>
-				<option label=" "></option>
-				<option value="Brebis">Brebis</option>
-				<option value="Chèvre">Chèvre</option>
-				<option value="Vache">Vache</option>
-			</select>
-			<select name="filters" id="filters" >
-				<option value="" disabled selected>Pasteurised</option>
-				<option label=" "></option>
-				<option value="1">Yes</option>
-				<option value="2">No</option>
-			</select>
+
+	<div id="search-div">
+		<div class="search-searchBar">
+		  <input type="text" id="searchTxt2" placeholder="Search..">
+		  <!--<button type="button" onClick="search()">Rechercher</button>-->
+		  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()">
 		</div>
 	</div>
-	<div id="main-div">
-		<div id="res-container">
-			<table id="resultat">
-			</table>
-
-		</div>
+	<div id="search-filt">
+		<select name="filters" id="filters" >
+			<option value="" disabled selected>Country</option>
+			<option label=" "></option>
+			<option value="Denmark">Denmark</option>
+			<option value="France">France</option>
+			<option value="Italia">Italy</option>
+		</select>
+		<select name="filters" id="filters" >
+			<option value="" disabled selected>Milk</option>
+			<option label=" "></option>
+			<option value="Brebis">Brebis</option>
+			<option value="Chèvre">Chèvre</option>
+			<option value="Vache">Vache</option>
+		</select>
+		<select name="filters" id="filters" >
+			<option value="" disabled selected>Pasteurised</option>
+			<option label=" "></option>
+			<option value="1">Yes</option>
+			<option value="2">No</option>
+		</select>
 	</div>
+</div>
+<div id="main-div">
+	<div id="res-container">
+		<table id="resultat">
+		</table>
 
-<button type="button" onClick="showAll()">TEST</button>
-
+	</div>
+</div>
 
 <script src="script.js"></script>
 
