@@ -4,7 +4,7 @@ function search(){
 	let searchTxt = document.getElementById("searchTxt").value;
 	searchTxt = encodeURIComponent(searchTxt);
 
-	let countryTxt = document.getElementById("countryFilter").value;
+	let countryTxt = document.getElementById("countryFilters").value;
 	countryTxt = encodeURIComponent(countryTxt);
 
 	location.href = `./results_cheese.html?search=${searchTxt}&country=${countryTxt}` ;
