@@ -138,7 +138,7 @@ function afficherResultats(data){
 
 
 
-		result += '<p><a href=index.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
+		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
 
 		result += '</td>';
 
