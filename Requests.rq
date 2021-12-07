@@ -46,7 +46,7 @@
 	ORDER BY ASC(?label)
 ----------------------------------------------------------------------------
 	# Param : inputLabel, inputPasteurized
-	SELECT ?label ?thumbnail
+	SELECT ?label ?thumbnail ?pasteurized
 	WHERE {
 		?cheese a dbo:Cheese ;
 				dbo:abstract ?abstract ;
@@ -58,7 +58,7 @@
 			langMatches(lang(?pasteurized), "EN") &&
 			REGEX(?abstract ,"cheese", "i") &&
 			REGEX(?pasteurized, "${inputPasteurized}", "i") &&
-			REGEX(?label, "${input}", "i")
+			REGEX(?label, "${inputLabel}", "i")
 		)
 		OPTIONAL {
 			?cheese dbo:thumbnail ?thumbnail .

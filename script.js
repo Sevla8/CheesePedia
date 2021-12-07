@@ -7,8 +7,8 @@ function search(){
 	let countryTxt = document.getElementById("countryFilters").value;
 	countryTxt = encodeURIComponent(countryTxt);
 
-	let pasteurizedTxt = document.getElementById("pasteurizedFilter").value;
-	countryTxt = encodeURIComponent(pasteurizedTxt);
+	let pasteurizedTxt = document.getElementById("pasteurizedFilters").value;
+	pasteurizedTxt = encodeURIComponent(pasteurizedTxt);
 
 	location.href = `./results_cheese.html?search=${searchTxt}&country=${countryTxt}&pasteurized=${pasteurizedTxt}`; ;
 }
@@ -32,38 +32,13 @@ function searchCheeses() {
 		var inputCountry = decodeURIComponent(urlParams.get('country'));
 		console.log('Country:', inputCountry);
 	}
+	if (urlParams.has('pasteurized')) {
+		var inputPasteurized = decodeURIComponent(urlParams.get('pasteurized'));
+		console.log('Pasteurized:', inputPasteurized);
+	}
 
 	var contenu_requete = "";
-	if (inputCountry != "") {
-		contenu_requete = `
-		SELECT ?label ?thumbnail ?country
-		WHERE {
-			?cheese a dbo:Cheese ;
-					dbo:abstract ?abstract ;
-					dbp:country ?country0 ;
-					rdfs:label ?label .
-			FILTER(
-				langMatches(lang(?label),"EN") &&
-				langMatches(lang(?abstract),"EN") &&
-				REGEX(?abstract ,"cheese", "i") &&
-				REGEX(?label, "${inputLabel}", "i") &&
-				REGEX(?country0, "${inputCountry}", "i")
-			)
-			OPTIONAL {
-				?cheese dbo:thumbnail ?thumbnail .
-			}
-			OPTIONAL {
-				?country0 rdfs:label ?country_label .
-				FILTER(
-					langMatches(lang(?country_label), "EN") &&
-					REGEX(?country_label, "${inputCountry}", "i")
-				)
-			}
-			BIND(COALESCE(?country_label, ?country0) AS ?country)
-		}
-		ORDER BY ASC(?label)
-		`;
-	} else {
+	if (inputCountry == "" && inputPasteurized == "") {
 		contenu_requete = `
 			SELECT ?label ?thumbnail
 			WHERE {
@@ -79,6 +54,59 @@ function searchCheeses() {
 				OPTIONAL {
 					?cheese dbo:thumbnail ?thumbnail .
 				}
+			}
+			ORDER BY ASC(?label)
+		`;
+	}
+	else if (inputCountry == "" && inputPasteurized != "") {
+		contenu_requete = `
+		SELECT ?label ?thumbnail ?pasteurized
+		WHERE {
+			?cheese a dbo:Cheese ;
+					dbo:abstract ?abstract ;
+					dbp:pasteurized ?pasteurized ;
+					rdfs:label ?label .
+			FILTER(
+				langMatches(lang(?label),"EN") &&
+				langMatches(lang(?abstract),"EN") &&
+				langMatches(lang(?pasteurized), "EN") &&
+				REGEX(?abstract ,"cheese", "i") &&
+				REGEX(?pasteurized, "${inputPasteurized}", "i") &&
+				REGEX(?label, "${inputLabel}", "i")
+			)
+			OPTIONAL {
+				?cheese dbo:thumbnail ?thumbnail .
+			}
+		}
+		ORDER BY ASC(?label)
+		`;
+	}
+	else if (inputCountry != "" && inputPasteurized == "") {
+		contenu_requete = `
+			SELECT ?label ?thumbnail ?country
+			WHERE {
+				?cheese a dbo:Cheese ;
+						dbo:abstract ?abstract ;
+						dbp:country ?country0 ;
+						rdfs:label ?label .
+				FILTER(
+					langMatches(lang(?label),"EN") &&
+					langMatches(lang(?abstract),"EN") &&
+					REGEX(?abstract ,"cheese", "i") &&
+					REGEX(?label, "${inputLabel}", "i") &&
+					REGEX(?country0, "${inputCountry}", "i")
+				)
+				OPTIONAL {
+					?cheese dbo:thumbnail ?thumbnail .
+				}
+				OPTIONAL {
+					?country0 rdfs:label ?country_label .
+					FILTER(
+						langMatches(lang(?country_label), "EN") &&
+						REGEX(?country_label, "${inputCountry}", "i")
+					)
+				}
+				BIND(COALESCE(?country_label, ?country0) AS ?country)
 			}
 			ORDER BY ASC(?label)
 		`;
