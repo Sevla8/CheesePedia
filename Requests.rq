@@ -1,3 +1,4 @@
+# Param : input
 SELECT ?label ?thumbnail
 WHERE {
 	?cheese a dbo:Cheese ;
@@ -5,48 +6,12 @@ WHERE {
 			rdfs:label ?label .
 	FILTER(
 		langMatches(lang(?label),"EN") &&
-		langMatches(lang(?abstract),"EN") && REGEX(?abstract ,"cheese", "i")
+		langMatches(lang(?abstract),"EN") &&
+		REGEX(?abstract ,"cheese", "i") &&
+		REGEX(?label, "${input}", "i")
 	)
 	OPTIONAL {
 		?cheese dbo:thumbnail ?thumbnail .
-	}
-}
-ORDER BY ASC(?label)
-
-# Param : input
-SELECT ?label ?thumbnail ?country
-GROUP_CONCAT(DISTINCT ?texture; SEPARATOR=", ") as ?textures
-GROUP_CONCAT(DISTINCT ?s; SEPARATOR=", ") AS ?sources
-WHERE { # we don't accept cheeses without label, thumbnail or abstract
-	?cheese a dbo:Cheese ;
-			rdfs:label ?label ;
-			dbo:thumbnail ?thumbnail ;
-			dbo:abstract ?abstract .
-	FILTER(
-		langMatches(lang(?label), "EN") &&
-		langMatches(lang(?abstract), "EN") &&
-		REGEX(?label, "${input}", "i") &&
-		REGEX(?abstract ,"cheese", "i")
-	)
-	optional { # some cheeses don't have a country informed
-		?cheese dbp:country ?country0 ;
-		optional { # somecountries are dbo:Country, some others are xsd:string
-			?country0 rdfs:label ?country_label .
-			FILTER(langMatches(lang(?country_label), "EN"))
-		}
-		BIND(COALESCE(?country_label, ?country0) AS ?country)
-	}
-	optional { # some cheeses don't have a source informed
-		?cheese dbp:source ?source .
-		optional { # some sources are dbo:Animal (or else), some others are xsd:string
-			?source rdfs:label ?source_label .
-			FILTER(langMatches(lang(?source_label), "EN"))
-		}
-		BIND(COALESCE(?source_label, ?source) AS ?s)
-	}
-	optional { # some cheeses don't have a texture informed
-		?cheese dbp:texture ?texture .
-		FILTER(langMatches(lang(?texture), "EN"))
 	}
 }
 ORDER BY ASC(?label)
