@@ -26,26 +26,61 @@
 		</div>
 	</div>
 	<div id="search-filt">
-		<select name="filters" id="countryFilter" >
+	
+		  <select name="certification" id="certificationFilters" >
+			<option value="" disabled selected>Certification</option>
+			<option label="-"></option>
+			<option value="AOC">AOC</option>
+			<option value="AOP">AOP</option>
+			<option value="PDO">PDO</option>
+			<option value="DOC">DOC</option>
+		  </select>
+		  
+		  <select name="texture" id="textureFilters" >
+			<option value="" disabled selected>Texture</option>
+			<option label="-"></option>
+			<option value="SFirm">SFirm</option>
+			<option value="SHard">SHard</option>
+			<option value="SSoft">SSoft</option>
+			<option value="Firm">Firm</option>
+			<option value="Soft">Soft</option>
+			<option value="Hard">Hard</option>
+			<option value="Crumbly">Crumbly</option>
+			<option value="Creamy">Creamy</option>
+			<option value="Compact">Compact</option>
+			<option value="Granular">Granular</option>
+			<option value="Moist">Moist</option>
+			<option value="Elastic">Elastic</option>
+			<option value="Stringy">Stringy</option>
+			<option value="Smooth">Smooth</option>
+		  </select>
+		  
+		  <select name="source" id="sourceFilters" >
+			<option value="" disabled selected>Source</option>
+			<option label="-"></option>
+			<option value="Goat">Goat</option>
+			<option value="Cow">Cow</option>
+			<option value="Sheep">Sheep</option>
+			<option value="Buffalo">Buffalo</option>
+			<option value="Donkeys">Donkeys</option>
+			<option value="Yak">Yak</option>
+			<option value="Moose">Moose</option>
+		  </select>
+		  
+		  <select name="pasteurized" id="pasteurizedFilters" >
+			<option value="" disabled selected>Pasteurized</option>
+			<option label="-"></option>
+			<option value="Yes">Yes</option>
+			<option value="No">No</option>
+		  </select>
+
+		  <select name="country" id="countryFilters" >
 			<option value="" disabled selected>Country</option>
 			<option label=" "></option>
 			<option value="Denmark">Denmark</option>
 			<option value="France">France</option>
 			<option value="Italia">Italy</option>
-		</select>
-		<select name="filters" id="filters" >
-			<option value="" disabled selected>Milk</option>
-			<option label=" "></option>
-			<option value="Brebis">Brebis</option>
-			<option value="Chèvre">Chèvre</option>
-			<option value="Vache">Vache</option>
-		</select>
-		<select name="filters" id="filters" >
-			<option value="" disabled selected>Pasteurised</option>
-			<option label=" "></option>
-			<option value="1">Yes</option>
-			<option value="2">No</option>
-		</select>
+		  </select>
 	</div>
 </div>
 <div id="main-div">
