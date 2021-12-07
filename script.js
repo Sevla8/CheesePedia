@@ -1,10 +1,17 @@
 //JAVASCRIPT FILE
 
 function search(){
-  let searchTxt = document.getElementById("searchTxt").value;
+
+ let searchTxt = document.getElementById("searchTxt").value;
   searchTxt = encodeURIComponent(searchTxt);
   location.href = `./results_cheese.html?search=${searchTxt}` ;
 }
+
+function enter(elem){
+	if(event.key == 'Enter') {
+		searchTxt = document.getElementById("searchTxt").value;
+  		location.href = "./results_cheese.html" ;
+	}
 
 //Affichage de la liste des fromages (inspiré du code moodle)
 function searchCheeses() {
