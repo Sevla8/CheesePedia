@@ -1,4 +1,4 @@
-# Param : input
+# Param : inputLabel,
 SELECT ?label ?thumbnail
 WHERE {
 	?cheese a dbo:Cheese ;
@@ -13,6 +13,34 @@ WHERE {
 	OPTIONAL {
 		?cheese dbo:thumbnail ?thumbnail .
 	}
+}
+ORDER BY ASC(?label)
+
+# Param : inputLabel, inputCountry
+SELECT ?label ?thumbnail ?country
+WHERE {
+	?cheese a dbo:Cheese ;
+			dbo:abstract ?abstract ;
+			dbp:country ?country0 ;
+			rdfs:label ?label .
+	FILTER(
+		langMatches(lang(?label),"EN") &&
+		langMatches(lang(?abstract),"EN") &&
+		REGEX(?abstract ,"cheese", "i") &&
+		REGEX(?label, "${inputLabel}", "i") &&
+		REGEX(?country0, "${inputCountry}", "i")
+	)
+	OPTIONAL {
+		?cheese dbo:thumbnail ?thumbnail .
+	}
+	OPTIONAL {
+		?country0 rdfs:label ?country_label .
+		FILTER(
+			langMatches(lang(?country_label), "EN") &&
+			REGEX(?country_label, "${inputCountry}", "i")
+		)
+	}
+	BIND(COALESCE(?country_label, ?country0) AS ?country)
 }
 ORDER BY ASC(?label)
 
