@@ -10,6 +10,12 @@ function search(){
 	location.href = `./results_cheese.html?search=${searchTxt}&country=${countryTxt}` ;
 }
 
+function enter(elem){
+	if(event.key == 'Enter') {
+		searchTxt = document.getElementById("searchTxt").value;
+  		location.href = "./results_cheese.html" ;
+	}
+
 //Affichage de la liste des fromages (inspiré du code moodle)
 function searchCheeses() {
 	const queryString = window.location.search;

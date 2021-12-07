@@ -100,10 +100,17 @@ body {
 #name{
 	font: 2em bold "Bodoni MT", sans-serif;
 	color: #d39600;
+	display:inline-block;
+	vertical-align:top;
+	padding-right: 7%;
 }
 #cheeseek{
 	width: 60%;
 	margin: 5%;
+}
+#cheeseek:hover{
+	animation: bounce; /* referring directly to the animation's @keyframe declaration */
+	animation-duration: 2s; /* don't forget to set a duration! */
 }
 #resultat{
 	display: table;
@@ -150,6 +157,14 @@ body {
 	vertical-align:top;
 	color: #444444;
 }
+#history-img{
+	width: 70px;
+	display:inline-block;
+}
+#link-history-img{
+	float: left;
+}
+
 #search-cheeseek{
 	margin: 7% 0 0 5%;
 	vertical-align:baseline;
@@ -181,6 +196,8 @@ body {
 .cell-content:hover{
 	filter:brightness(80%);
 	-webkit-transition: 500ms;
+	animation: pulse;
+	animation-duration: 2s;
 }
 .table-cell{
 	display: table-cell;
