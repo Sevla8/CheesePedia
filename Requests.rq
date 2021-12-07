@@ -1,10 +1,11 @@
-select ?f ?image where {
+select ?l ?image where {
 ?f a dbo:Cheese.
 ?f dbo:abstract ?a.
+?f rdfs:label ?label.
+FILTER(langMatches(lang(?l),"EN")).
 FILTER(langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese")).
-OPTIONAL{?f dbo:thumbnail ?image}.
-}
-ORDER BY ASC(?f)
+OPTIONAL{?f dbo:thumbnail ?image.}
+}ORDER BY ASC(?label)
 
 # Param : input
 SELECT ?label ?thumbnail ?country
