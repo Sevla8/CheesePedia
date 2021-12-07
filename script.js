@@ -8,7 +8,13 @@ function myFunction() {
 function search(){
   searchTxt = document.getElementById("searchTxt").value;
   location.href = "./results_cheese.html" ;
- 
+}
+
+function enter(elem){
+	if(event.key == 'Enter') {
+		searchTxt = document.getElementById("searchTxt").value;
+  		location.href = "./results_cheese.html" ;
+	}
 }
 
 //Affichage de la liste des fromages (inspiré du code moodle)

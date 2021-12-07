@@ -100,6 +100,9 @@ body {
 #name{
 	font: 2em bold "Bodoni MT", sans-serif;
 	color: #d39600;
+	display:inline-block;
+	vertical-align:top;
+	padding-right: 7%;
 }
 #cheeseek{
 	width: 60%;
@@ -150,6 +153,14 @@ body {
 	vertical-align:top;
 	color: #444444;
 }
+#history-img{
+	width: 70px;
+	display:inline-block;
+}
+#link-history-img{
+	float: left;
+}
+
 #search-cheeseek{
 	margin: 7% 0 0 5%;
 	vertical-align:baseline;
