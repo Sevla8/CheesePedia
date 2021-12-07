@@ -77,11 +77,14 @@ function searchCheeses() {
 //Affichage de la liste des fromages (inspiré du code moodle)
 function showAll(){
 
-	var contenu_requete = `select ?n,?i where{
-		?f a dbo:Cheese.
-		?f dbp:name ?n.
-		?f dbo:thumbnail ?i.
-	}`;
+	var contenu_requete = `select ?label ?thumbnail where {
+	?cheese a dbo:Cheese.
+	?cheese dbo:abstract ?abstract.
+	?cheese rdfs:label ?label.
+	FILTER(langMatches(lang(?label),"EN")).
+	FILTER(langMatches(lang(?abstract),"EN") && REGEX(?abstract ,"[Cc]heese")).
+	OPTIONAL{?cheese dbo:thumbnail ?thumbnail.}
+	}ORDER BY ASC(?label)`;
 
     // Encodage de l'URL à transmettre à DBPedia
     var url_base = "http://dbpedia.org/sparql";
@@ -113,21 +116,29 @@ function afficherResultats(data){
 
 		if (cheese.country) result += '<p class="country"><em>Country: </em>' + cheese.country.value + '</p>';
 
-		result += '<p class="source"><em>Source: </em><ul>';
-		let sources = cheese.sources.value.split(', ');
-		sources.forEach((source) => {
-			if (source) result += '<li>' + capitalizeFirstLetter(source) + '</li>';
-		});
-		result += '</ul></p>';
+		if(cheese.sources){
+			result += '<p class="source"><em>Source: </em><ul>';
+			let sources = cheese.sources.value.split(', ');
+			sources.forEach((source) => {
+				if (source) result += '<li>' + capitalizeFirstLetter(source) + '</li>';
+			});
+			result += '</ul></p>';
+		}
+		
+		if(cheese.texture){
+			result += '<p class="texture"><em>Texture: </em><ul>';
+			let textures = cheese.textures.value.split(', ');
+			textures.forEach((texture) => {
+				if (texture) result += '<li>' + capitalizeFirstLetter(texture) + '</li>';
+			});
+			result += '</ul></p>';
+		}
+		
+		if(cheese.thumbnail){
+			result += '<p class="thumbnail"><img class="img-result" src="' + cheese.thumbnail.value + '" alt="' + cheese.label.value + ' onerror=\"this.onerror=null; this.src="ressources/defaultImg.png"\" target="_blank"></p>';
+		}
 
-		result += '<p class="texture"><em>Texture: </em><ul>';
-		let textures = cheese.textures.value.split(', ');
-		textures.forEach((texture) => {
-			if (texture) result += '<li>' + capitalizeFirstLetter(texture) + '</li>';
-		});
-		result += '</ul></p>';
-
-		result += '<p class="thumbnail"><img class="img-result" src="' + cheese.thumbnail.value + '" alt="' + cheese.label.value + ' onerror=\"this.onerror=null; this.src="ressources/defaultImg.png"\" target="_blank"></p>';
+		
 
 		result += '<p><a href=index.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
 
