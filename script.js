@@ -15,6 +15,7 @@ function enter(elem){
 		searchTxt = document.getElementById("searchTxt").value;
   		location.href = "./results_cheese.html" ;
 	}
+}
 
 //Affichage de la liste des fromages (inspiré du code moodle)
 function searchCheeses() {
