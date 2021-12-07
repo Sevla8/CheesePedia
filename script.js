@@ -38,8 +38,7 @@ function showAll(){
 
 // Affichage des résultats dans un tableau (inspiré du code moodle)
 function afficherResultats(data){
-	// Tableau pour mémoriser l'ordre des variables ; sans doute pas nécessaire
-	// pour vos applications, c'est juste pour la démo sous forme de tableau
+	
 	var index = [];
 
 	var contenuTableau = "<tr>";
