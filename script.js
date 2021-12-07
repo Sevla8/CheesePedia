@@ -136,6 +136,8 @@ function afficherResultats(data){
 		
 		if(cheese.thumbnail){
 			result += '<p class="thumbnail"><img class="img-result" src="' + cheese.thumbnail.value + '" alt="' + cheese.label.value + ' onerror=\"this.onerror=null; this.src="ressources/defaultImg.png"\" target="_blank"></p>';
+		}else{
+			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
 
 		
