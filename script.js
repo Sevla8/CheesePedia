@@ -4,7 +4,7 @@ function search(){
 	let searchTxt = document.getElementById("searchTxt").value;
 	searchTxt = encodeURIComponent(searchTxt);
 
-	let countryTxt = document.getElementById("countryFilter").value;
+	let countryTxt = document.getElementById("countryFilters").value;
 	countryTxt = encodeURIComponent(countryTxt);
 
 	let pasteurizedTxt = document.getElementById("pasteurizedFilter").value;
