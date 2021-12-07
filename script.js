@@ -1,9 +1,20 @@
 //JAVASCRIPT FILE
 
 function search(){
-  let searchTxt = document.getElementById("searchTxt").value;
-  searchTxt = encodeURIComponent(searchTxt);
-  location.href = `./results_cheese.html?search=${searchTxt}` ;
+	let searchTxt = document.getElementById("searchTxt").value;
+	searchTxt = encodeURIComponent(searchTxt);
+
+	let countryTxt = document.getElementById("countryFilter").value;
+	countryTxt = encodeURIComponent(countryTxt);
+
+	location.href = `./results_cheese.html?search=${searchTxt}&country=${countryTxt}` ;
+}
+
+function enter(elem){
+	if(event.key == 'Enter') {
+		searchTxt = document.getElementById("searchTxt").value;
+  		location.href = "./results_cheese.html" ;
+	}
 }
 
 //Affichage de la liste des fromages (inspiré du code moodle)
@@ -11,28 +22,64 @@ function searchCheeses() {
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	if (urlParams.has('search')) {
-		var input = decodeURIComponent(urlParams.get('search'));
-		console.log('Search:', input);
+		var inputLabel = decodeURIComponent(urlParams.get('search'));
+		console.log('Search:', inputLabel);
+	}
+	if (urlParams.has('country')) {
+		var inputCountry = decodeURIComponent(urlParams.get('country'));
+		console.log('Country:', inputCountry);
 	}
 
-	var contenu_requete = `
-		SELECT ?label ?thumbnail
+	var contenu_requete = "";
+	if (inputCountry != "") {
+		contenu_requete = `
+		SELECT ?label ?thumbnail ?country
 		WHERE {
 			?cheese a dbo:Cheese ;
 					dbo:abstract ?abstract ;
+					dbp:country ?country0 ;
 					rdfs:label ?label .
 			FILTER(
 				langMatches(lang(?label),"EN") &&
 				langMatches(lang(?abstract),"EN") &&
 				REGEX(?abstract ,"cheese", "i") &&
-				REGEX(?label, "${input}", "i")
+				REGEX(?label, "${inputLabel}", "i") &&
+				REGEX(?country0, "${inputCountry}", "i")
 			)
 			OPTIONAL {
 				?cheese dbo:thumbnail ?thumbnail .
 			}
+			OPTIONAL {
+				?country0 rdfs:label ?country_label .
+				FILTER(
+					langMatches(lang(?country_label), "EN") &&
+					REGEX(?country_label, "${inputCountry}", "i")
+				)
+			}
+			BIND(COALESCE(?country_label, ?country0) AS ?country)
 		}
 		ORDER BY ASC(?label)
-	`;
+		`;
+	} else {
+		contenu_requete = `
+			SELECT ?label ?thumbnail
+			WHERE {
+				?cheese a dbo:Cheese ;
+						dbo:abstract ?abstract ;
+						rdfs:label ?label .
+				FILTER(
+					langMatches(lang(?label),"EN") &&
+					langMatches(lang(?abstract),"EN") &&
+					REGEX(?abstract ,"cheese", "i") &&
+					REGEX(?label, "${inputLabel}", "i")
+				)
+				OPTIONAL {
+					?cheese dbo:thumbnail ?thumbnail .
+				}
+			}
+			ORDER BY ASC(?label)
+		`;
+	}
 
     // Encodage de l'URL à transmettre à DBPedia
     var url_base = "http://dbpedia.org/sparql";
@@ -82,8 +129,11 @@ function afficherResultats(data){
 			result += '</ul></p>';
 		}
 
-		if(cheese.thumbnail){
-			result += '<p class="thumbnail"><img class="img-result" src="' + cheese.thumbnail.value + '" alt="' + cheese.label.value + ' onerror=\"this.onerror=null; this.src="ressources/defaultImg.png"\" target="_blank"></p>';
+		if (cheese.thumbnail) {
+			result += '<p class="thumbnail"><img class="img-result" src="' + cheese.thumbnail.value + '" alt="' + cheese.label.value + '" onerror="this.onerror=null; this.src=\'ressources/defaultImg.png\'" target="_blank"></p>';
+		}
+		else {
+			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
 
 

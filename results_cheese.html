@@ -7,25 +7,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="Style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 
-<body>
 <body onload="searchCheeses();">
-
-<div id="header">
-	<div id="search-img">
-		<img id="search-cheeseek" src="ressources/cheeseek.png" alt="logo">
-	</div>
+	<div id="header">
+		<div id="search-img">
+			<a href="index.html">
+				<img id="search-cheeseek" src="ressources/cheeseek.png" alt="logo">
+			</a>
+		</div>
 
 	<div id="search-div">
 		<div class="search-searchBar">
-		  <input type="text" id="searchTxt2" placeholder="Search..">
+		  <input type="text" id="searchTxt" placeholder="Search..">
 		  <!--<button type="button" onClick="search()">Rechercher</button>-->
 		  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()">
 		</div>
 	</div>
 	<div id="search-filt">
-		<select name="filters" id="filters" >
+		<select name="filters" id="countryFilter" >
 			<option value="" disabled selected>Country</option>
 			<option label=" "></option>
 			<option value="Denmark">Denmark</option>
