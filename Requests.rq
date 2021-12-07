@@ -1,0 +1,94 @@
+select ?f where {
+?f a dbo:Cheese.
+?f dbo:abstract ?a.
+FILTER(langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese")).
+}
+
+# Param : input
+SELECT ?label ?thumbnail ?country
+GROUP_CONCAT(DISTINCT ?texture; SEPARATOR=", ") as ?textures
+GROUP_CONCAT(DISTINCT ?s; SEPARATOR=", ") AS ?sources
+WHERE { # we don't accept cheeses without label, thumbnail or abstract
+	?cheese a dbo:Cheese ;
+			rdfs:label ?label ;
+			dbo:thumbnail ?thumbnail ;
+			dbo:abstract ?abstract .
+	FILTER(
+		langMatches(lang(?label), "EN") &&
+		langMatches(lang(?abstract), "EN") &&
+		REGEX(?label, "${input}", "i") &&
+		REGEX(?abstract ,"cheese", "i")
+	)
+	optional { # some cheeses don't have a country informed
+		?cheese dbp:country ?country0 ;
+		optional { # somecountries are dbo:Country, some others are xsd:string
+			?country0 rdfs:label ?country_label .
+			FILTER(langMatches(lang(?country_label), "EN"))
+		}
+		BIND(COALESCE(?country_label, ?country0) AS ?country)
+	}
+	optional { # some cheeses don't have a source informed
+		?cheese dbp:source ?source .
+		optional { # some sources are dbo:Animal (or else), some others are xsd:string
+			?source rdfs:label ?source_label .
+			FILTER(langMatches(lang(?source_label), "EN"))
+		}
+		BIND(COALESCE(?source_label, ?source) AS ?s)
+	}
+	optional { # some cheeses don't have a texture informed
+		?cheese dbp:texture ?texture .
+		FILTER(langMatches(lang(?texture), "EN"))
+	}
+}
+ORDER BY ASC(?label)
+
+# Param : label
+SELECT ?label ?thumbnail ?country
+GROUP_CONCAT(DISTINCT ?texture; SEPARATOR=", ") as ?textures
+GROUP_CONCAT(DISTINCT ?s; SEPARATOR=", ") AS ?sources
+GROUP_CONCAT(DISTINCT ?certification; SEPARATOR="|") as ?certifications
+GROUP_CONCAT(DISTINCT ?pasteurized; SEPARATOR="|") as ?pasteurizeds
+GROUP_CONCAT(DISTINCT ?aging; SEPARATOR="|") as ?agings
+WHERE { # we don't accept cheeses without label, name, thumbnail, country or abstract
+	?cheese a dbo:Cheese ;
+			rdfs:label ?label ;
+			dbo:thumbnail ?thumbnail ;
+			dbp:country ?country0 ;
+			dbo:abstract ?abstract .
+	FILTER(
+		langMatches(lang(?label), "EN") &&
+		langMatches(lang(?abstract), "EN") &&
+		xsd:string(?label) = "${label}" &&
+		REGEX(?abstract ,"cheese", "i")
+	)
+	optional { # somecountries are dbo:Country, some others are xsd:string
+		?country0 rdfs:label ?country_label .
+		FILTER(langMatches(lang(?country_label), "EN"))
+	}
+	BIND(COALESCE(?country_label, ?country0) AS ?country)
+	optional { # some cheeses don't have a source informed
+		?cheese dbp:source ?source .
+		optional { # some sources are dbo:Animal (or else), some others are xsd:string
+			?source rdfs:label ?source_label .
+			FILTER(langMatches(lang(?source_label), "EN"))
+		}
+		BIND(COALESCE(?source_label, ?source) AS ?s)
+	}
+	optional { # some cheeses don't have a texture informed
+		?cheese dbp:texture ?texture .
+		FILTER(langMatches(lang(?texture), "EN"))
+	}
+	optional { # some cheeses don't have an aging informed
+		?cheese dbp:aging ?aging .
+		FILTER(langMatches(lang(?aging), "EN"))
+	}
+	optional { # some cheeses don't have a certification informed
+		?cheese dbp:certification ?certification .
+		FILTER(langMatches(lang(?certification), "EN"))
+	}
+	optional {
+		?cheese dbp:pasteurized ?pasteurized .
+		FILTER(langMatches(lang(?pasteurized), "EN"))
+	}
+}
+ORDER BY ASC(?label)
