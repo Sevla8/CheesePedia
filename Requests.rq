@@ -1,10 +1,10 @@
-select ?label ?image where {
-?f a dbo:Cheese.
-?f dbo:abstract ?a.
-?f rdfs:label ?label.
+select ?label ?thumbnail where {
+?cheese a dbo:Cheese.
+?cheese dbo:abstract ?abstract.
+?cheese rdfs:label ?label.
 FILTER(langMatches(lang(?label),"EN")).
-FILTER(langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese")).
-OPTIONAL{?f dbo:thumbnail ?image.}
+FILTER(langMatches(lang(?abstract),"EN") && REGEX(?abstract ,"[Cc]heese")).
+OPTIONAL{?cheese dbo:thumbnail ?thumbnail.}
 }ORDER BY ASC(?label)
 
 # Param : input
