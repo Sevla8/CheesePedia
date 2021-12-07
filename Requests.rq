@@ -66,7 +66,6 @@
 	}
 	ORDER BY ASC(?label)
 ----------------------------------------------------------------------------
-
 	# Param : label
 	SELECT ?label ?thumbnail ?country
 	GROUP_CONCAT(DISTINCT ?texture; SEPARATOR=", ") as ?textures
@@ -117,7 +116,6 @@
 		}
 	}
 	ORDER BY ASC(?label)
-
 ---------------------------------------------------------------------
 	#Param : Label
 	select ?f  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC
@@ -148,19 +146,43 @@
 				sum(if(regex(?s,"[Mm]oose"),1,0)) as ?Moose
 				sum(if(regex(?p,"([Yy]es|[Oo]ften|[Ff]requently|[Pp]ossibly|[Dd]epends)"),1,0))+sum(if(regex(?p2,"([Yy]es|[Oo]ften|[Ff]requently|[Pp]ossibly|[Dd]epends)"),1,0)) as ?Pasteurized
 
+	WHERE {
+		?f a dbo:Cheese.
+		?f dbo:abstract ?a.
+		?f rdfs:label ?n.
+		OPTIONAL{?f dbp:aging	?a}.
+		OPTIONAL{?f dbp:certification ?c.}
+		OPTIONAL{?f dbp:pasteurised ?p}.
+		OPTIONAL{?f dbp:pasteurized ?p2}.
+
+		OPTIONAL{?f dbp:source ?s}.
+		OPTIONAL{?f dbp:texture ?t}.
+
+		FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n="${label}").
+	}
+	GROUP BY ?f
+------------------------------------------
+	select distinct ?cn
 				where {
 	?f a dbo:Cheese.
 	?f dbo:abstract ?a.
 	?f rdfs:label ?n.
-	OPTIONAL{?f dbp:aging	?a}.
-	OPTIONAL{?f dbp:certification ?c.}
-	OPTIONAL{?f dbp:pasteurised ?p}.
-	OPTIONAL{?f dbp:pasteurized ?p2}.
+	{?f dbo:country ?c}UNION
+	{?f dbp:country ?c}
+	?c rdfs:label ?cn.
 
-	OPTIONAL{?f dbp:source ?s}.
-	OPTIONAL{?f dbp:texture ?t}.
-
-
-	FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n="${label}").
+	FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN")  && langMatches(lang(?cn),"EN") && REGEX(?a ,"[Cc]heese") && ?n="Fromage blanc"@en).
 	}
-	GROUP BY ?f
+
+
+
+-------------------------------------------
+select distinct ?rn
+             where {
+?f a dbo:Cheese.
+?f dbo:abstract ?a.
+?f rdfs:label ?n.
+?r dbo:ingredient ?f.
+?r rdfs:label ?rn
+FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?rn),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n="Paneer"@en).
+}
