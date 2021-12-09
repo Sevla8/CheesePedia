@@ -1,4 +1,5 @@
-----------------------------------------------------------------------------
+# search by label #############################################################
+
 	# Param : inputLabel
 	SELECT ?label ?thumbnail
 	WHERE {
@@ -16,56 +17,100 @@
 		}
 	}
 	ORDER BY ASC(?label)
-----------------------------------------------------------------------------
-	# Param : inputLabel, inputCountry
-	SELECT ?label ?thumbnail ?country
+
+# global search ###############################################################
+
+	# Param : inputLabel, inputCertification, inputCountry, inputTexture, inputSource, inputPasteurized
+	SELECT ?label ?thumbnail
 	WHERE {
 		?cheese a dbo:Cheese ;
 				dbo:abstract ?abstract ;
-				dbp:country ?country0 ;
 				rdfs:label ?label .
 		FILTER(
-			langMatches(lang(?label),"EN") &&
-			langMatches(lang(?abstract),"EN") &&
+			langMatches(lang(?label), "EN") &&
+			langMatches(lang(?abstract), "EN") &&
 			REGEX(?abstract ,"cheese", "i") &&
-			REGEX(?label, "${inputLabel}", "i") &&
-			REGEX(?country0, "${inputCountry}", "i")
-		)
-		OPTIONAL {
-			?cheese dbo:thumbnail ?thumbnail .
-		}
-		OPTIONAL {
-			?country0 rdfs:label ?country_label .
-			FILTER(
-				langMatches(lang(?country_label), "EN") &&
-				REGEX(?country_label, "${inputCountry}", "i")
-			)
-		}
-		BIND(COALESCE(?country_label, ?country0) AS ?country)
-	}
-	ORDER BY ASC(?label)
-----------------------------------------------------------------------------
-	# Param : inputLabel, inputPasteurized
-	SELECT ?label ?thumbnail ?pasteurized
-	WHERE {
-		?cheese a dbo:Cheese ;
-				dbo:abstract ?abstract ;
-				dbp:pasteurized ?pasteurized ;
-				rdfs:label ?label .
-		FILTER(
-			langMatches(lang(?label),"EN") &&
-			langMatches(lang(?abstract),"EN") &&
-			langMatches(lang(?pasteurized), "EN") &&
-			REGEX(?abstract ,"cheese", "i") &&
-			REGEX(?pasteurized, "${inputPasteurized}", "i") &&
 			REGEX(?label, "${inputLabel}", "i")
 		)
+		OPTIONAL { # some cheeses have a certification
+			?cheese dbp:certification ?certification .
+			FILTER(
+				REGEX(?certification, "${inputCertification}", "i")
+			)
+			OPTIONAL {
+				?certification rdfs:label ?certification_label .
+				FILTER(
+					langMatches(lang(?certification_label), "EN") &&
+					REGEX(?certification_label, "${inputCertification}", "i")
+				)
+			}
+			BIND(COALESCE(?certification_label, ?certification) AS ?certification0)
+		}
+		OPTIONAL { # some cheeses have a country
+			?cheese dbp:country ?country .
+			FILTER(
+				REGEX(?country, "${inputCountry}", "i")
+			)
+			OPTIONAL {
+				?country rdfs:label ?country_label .
+				FILTER(
+					langMatches(lang(?country_label), "EN") &&
+					REGEX(?label, "${inputCountry}", "i")
+				)
+			}
+			BIND(COALESCE(?country_label, ?country) AS ?country0)
+		}
+		OPTIONAL { # some cheeses have a texture
+			?cheese dbp:texture ?texture .
+			FILTER(
+				REGEX(?texture, "${inputTexture}", "i")
+			)
+			OPTIONAL {
+				?texture rdfs:label ?texture_label .
+				FILTER(
+					langMatches(lang(?texture_label), "EN") &&
+					REGEX(?texture_label, "${inputTexture}", "i")
+				)
+			}
+			BIND(COALESCE(?texture_label, ?texture) AS ?texture0)
+		}
+		OPTIONAL { # some cheeses have a source
+			?cheese dbp:source ?source .
+			FILTER(
+				REGEX(?source, "${inputSource}", "i")
+			)
+			OPTIONAL {
+				?source rdfs:label ?source_label .
+				FILTER(
+					langMatches(lang(?source_label), "EN") &&
+					REGEX(?source_label, "${inputSource}", "i")
+				)
+			}
+			BIND(COALESCE(?source_label, ?source) AS ?source0)
+		}
+		OPTIONAL { # some cheeses have a pasteurization
+			?cheese dbp:pasteurized ?pasteurized .
+			FILTER(
+				REGEX(?pasteurized, "${inputPasteurized}", "i")
+			)
+			OPTIONAL {
+				?pasteurized rdfs:label ?pasteurized_label .
+				FILTER(
+					langMatches(lang(?pasteurized_label), "EN") &&
+					REGEX(?pasteurized_label, "${inputPasteurized}", "i")
+				)
+			}
+			BIND(COALESCE(?pasteurized_label, ?pasteurized) AS ?pasteurized0)
+		}
 		OPTIONAL {
 			?cheese dbo:thumbnail ?thumbnail .
 		}
 	}
+	GROUP BY ?label ?thumbnail
 	ORDER BY ASC(?label)
-----------------------------------------------------------------------------
+
+###############################################################################
+
 	# Param : label
 	SELECT ?label ?thumbnail ?country
 	GROUP_CONCAT(DISTINCT ?texture; SEPARATOR=", ") as ?textures
@@ -117,11 +162,11 @@
 	}
 	ORDER BY ASC(?label)
 ---------------------------------------------------------------------
-	select ?f ?a ?n ?thumbnail  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC 
+	select ?f ?a ?n ?thumbnail  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC
               sum(if(regex(?c,"AOP"),1,0)) as ?AOP
-              sum(if(regex(?c,"P.*D.*O"),1,0)) as ?PDO 
-              sum(if(regex(?c,"D.*O.*C"),1,0)) as ?DOC 
-              sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ff]irm"),1,0)) as ?SFirm 
+              sum(if(regex(?c,"P.*D.*O"),1,0)) as ?PDO
+              sum(if(regex(?c,"D.*O.*C"),1,0)) as ?DOC
+              sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ff]irm"),1,0)) as ?SFirm
               sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ha]ard"),1,0)) as ?SHard
              sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ss]oft"),1,0)) as ?SSoft
               sum(if(regex(?t,"[Ff]irm"),1,0))-sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ff]irm"),1,0)) as ?Firm
@@ -147,7 +192,7 @@
 
              where {
 ?f a dbo:Cheese.
-?f dbo:abstract ?a. 
+?f dbo:abstract ?a.
 ?f rdfs:label ?n.
 OPTIONAL{?f dbp:certification ?c.}
 OPTIONAL{?f dbp:pasteurised ?p}.
@@ -156,7 +201,8 @@ OPTIONAL{?f dbp:source ?s}.
 OPTIONAL{?f dbp:texture ?t}.
 OPTIONAL {?f dbo:thumbnail ?thumbnail}.
 
-FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n=${label}).
+
+FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n=${inputLabel}).
 }
 GROUP BY ?f ?a ?n ?thumbnail
 ------------------------------------------
