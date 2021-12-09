@@ -1,85 +1,85 @@
 <!-- Page d'accueil -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="Style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<title>Cheeseek</title>
 </head>
 
 <body>
-<div id="main-container">
-	<div id="main-block">
-		<img id="cheeseek" src="ressources/cheeseek.png" alt="logo">
+	<div id="main-container">
+		<div id="main-block">
+			<img id="cheeseek" src="ressources/cheeseek.png" alt="logo">
 
-		<div class="searchBar">
-		  <input type="text" id="searchTxt" placeholder="Search.." onkeydown="enter(this)">
-		  <!--<button type="button" onClick="search()">Rechercher</button>-->
-		  <img id="loupeLogo" src="ressources/loupe.png" onclick="search()">
+			<div class="searchBar">
+				<input type="text" id="searchTxt" placeholder="Search.." onkeydown="enter(this)">
+				<img id="loupeLogo" src="ressources/loupe.png" onclick="search()" alt="search">
+			</div>
+
+			<br/>
+			<select name="certification" id="certificationFilters">
+				<option value="" disabled selected>Certification</option>
+				<option label="-"></option>
+				<option value="AOC">AOC</option>
+				<option value="AOP">AOP</option>
+				<option value="PDO">PDO</option>
+				<option value="DOC">DOC</option>
+			</select>
+
+			<select name="country" id="countryFilters">
+				<option value="" disabled selected>Country</option>
+				<option label="-"></option>
+				<option value="Denmark">Denmark</option>
+				<option value="France">France</option>
+				<option value="Italia">Italy</option>
+			</select>
+
+			<select name="texture" id="textureFilters">
+				<option value="" disabled selected>Texture</option>
+				<option label="-"></option>
+				<option value="Semi-Firm">Semi-Firm</option>
+				<option value="Semi-Hard">Semi-Hard</option>
+				<option value="Semi-Soft">Semi-Soft</option>
+				<option value="Firm">Firm</option>
+				<option value="Soft">Soft</option>
+				<option value="Hard">Hard</option>
+				<option value="Crumbly">Crumbly</option>
+				<option value="Creamy">Creamy</option>
+				<option value="Compact">Compact</option>
+				<option value="Granular">Granular</option>
+				<option value="Moist">Moist</option>
+				<option value="Elastic">Elastic</option>
+				<option value="Stringy">Stringy</option>
+				<option value="Smooth">Smooth</option>
+			</select>
+
+			<select name="source" id="sourceFilters">
+				<option value="" disabled selected>Source</option>
+				<option label="-"></option>
+				<option value="Goat">Goat</option>
+				<option value="Cow">Cow</option>
+				<option value="Sheep">Sheep</option>
+				<option value="Buffalo">Buffalo</option>
+				<option value="Donkeys">Donkeys</option>
+				<option value="Yak">Yak</option>
+				<option value="Moose">Moose</option>
+			</select>
+
+			<select name="pasteurized" id="pasteurizedFilters">
+				<option value="" disabled selected>Pasteurized</option>
+				<option label="-"></option>
+				<option value="Yes">Yes</option>
+				<option value="No">No</option>
+			</select>
 		</div>
-
-		<br/>
-		
-		  <select name="certification" id="certificationFilters" >
-			<option value="" disabled selected>Certification</option>
-			<option label="-"></option>
-			<option value="AOC">AOC</option>
-			<option value="AOP">AOP</option>
-			<option value="PDO">PDO</option>
-			<option value="DOC">DOC</option>
-		  </select>
-			
-		  <select name="country" id="countryFilters" >
-			<option value="" disabled selected>Country</option>
-			<option label="-"></option>
-			<option value="Denmark">Denmark</option>
-			<option value="France">France</option>
-			<option value="Italia">Italy</option>
-		  </select>
-		  
-		  <select name="texture" id="textureFilters" >
-			<option value="" disabled selected>Texture</option>
-			<option label="-"></option>
-			<option value="SFirm">SFirm</option>
-			<option value="SHard">SHard</option>
-			<option value="SSoft">SSoft</option>
-			<option value="Firm">Firm</option>
-			<option value="Soft">Soft</option>
-			<option value="Hard">Hard</option>
-			<option value="Crumbly">Crumbly</option>
-			<option value="Creamy">Creamy</option>
-			<option value="Compact">Compact</option>
-			<option value="Granular">Granular</option>
-			<option value="Moist">Moist</option>
-			<option value="Elastic">Elastic</option>
-			<option value="Stringy">Stringy</option>
-			<option value="Smooth">Smooth</option>
-		  </select>
-		  
-		  <select name="source" id="sourceFilters" >
-			<option value="" disabled selected>Source</option>
-			<option label="-"></option>
-			<option value="Goat">Goat</option>
-			<option value="Cow">Cow</option>
-			<option value="Sheep">Sheep</option>
-			<option value="Buffalo">Buffalo</option>
-			<option value="Donkeys">Donkeys</option>
-			<option value="Yak">Yak</option>
-			<option value="Moose">Moose</option>
-		  </select>
-		  
-		  <select name="pasteurized" id="pasteurizedFilters" >
-			<option value="" disabled selected>Pasteurized</option>
-			<option label="-"></option>
-			<option value="Yes">Yes</option>
-			<option value="No">No</option>
-		  </select>
 	</div>
-</div>
-<script src="script.js"></script>
+	<script src="script.js"></script>
 
 </body>
+
 </html>
