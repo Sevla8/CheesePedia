@@ -234,6 +234,89 @@ FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?rn),"EN") && langMatches(
 
 
 
+=============================================alternative
+
+--------------------------------------------details d'un fromage
+
+SELECT * WHERE
+{ 
+{
+     select ?f ?a ?n ?thumbnail  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC
+              sum(if(regex(?c,"AOP"),1,0)) as ?AOP
+              sum(if(regex(?c,"P.*D.*O"),1,0)) as ?PDO
+              sum(if(regex(?c,"D.*O.*C"),1,0)) as ?DOC
+              sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ff]irm"),1,0)) as ?SFirm
+              sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ha]ard"),1,0)) as ?SHard
+             sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ss]oft"),1,0)) as ?SSoft
+              sum(if(regex(?t,"[Ff]irm"),1,0))-sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ff]irm"),1,0)) as ?Firm
+              sum(if(regex(?t,"[Ss]oft"),1,0))-sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Ss]oft"),1,0)) as ?Soft
+              sum(if(regex(?t,"[Hh]ard"),1,0))-sum(if(regex(?t,"([Ss]emi|[Mm]edium).?[Hh]ard"),1,0)) as ?Hard
+             sum(if(regex(?t,"[Cc]rumbly"),1,0)) as ?Crumbly
+             sum(if(regex(?t,"[Cc]ream"),1,0)) as ?Creamy
+             sum(if(regex(?t,"[Dd]ense"),1,0)) as ?Dense
+             sum(if(regex(?t,"[Cc]ompact"),1,0)) as ?Compact
+             sum(if(regex(?t,"[Gg]ranular"),1,0)) as ?Granular
+             sum(if(regex(?t,"[Mm]oist"),1,0)) as ?Moist
+             sum(if(regex(?t,"[Ee]lastic"),1,0)) as ?Elastic
+             sum(if(regex(?t,"[Ss]tringy"),1,0)) as ?Stringy
+             sum(if(regex(?t,"[Ss]mooth"),1,0)) as ?Smooth
+             sum(if(regex(?s,"[Gg]oat"),1,0)) as ?Goat
+             sum(if(regex(?s,"[Cc]ow|[Cc]attle"),1,0)) as ?Cow
+             sum(if(regex(?s,"[Ss]heep|[Ee]we"),1,0)) as ?Sheep
+             sum(if(regex(?s,"[Bb]uffalo|[Cc]arabao"),1,0)) as ?Buffalo
+             sum(if(regex(?s,"[Dd]onkey"),1,0)) as ?Donkeys
+             sum(if(regex(?s,"[Yy]ak"),1,0)) as ?Yak
+             sum(if(regex(?s,"[Mm]oose"),1,0)) as ?Moose
+             sum(if(regex(?p,"([Yy]es|[Oo]ften|[Ff]requently|[Pp]ossibly|[Dd]epends)"),1,0))+sum(if(regex(?p2,"([Yy]es|[Oo]ften|[Ff]requently|[Pp]ossibly|[Dd]epends)"),1,0)) as ?Pasteurized
+
+             where {
+?f a dbo:Cheese.
+?f dbo:abstract ?a.
+?f rdfs:label ?n.
+OPTIONAL{?f dbp:certification ?c.}
+OPTIONAL{?f dbp:pasteurised ?p}.
+OPTIONAL{?f dbp:pasteurized ?p2}.
+OPTIONAL{?f dbp:source ?s}.
+OPTIONAL{?f dbp:texture ?t}.
+OPTIONAL {?f dbo:thumbnail ?thumbnail}.
+
+
+FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n=${input}).
+}
+GROUP BY ?f ?a ?n ?thumbnail
+          
+}
+UNION
+{
+select distinct ?2rn ?2thumbnail
+             where {
+?2f a dbo:Cheese.
+?2f dbo:abstract ?2a.
+?2f rdfs:label ?2n.
+?2r dbo:ingredient ?2f.
+?2r rdfs:label ?2rn
+OPTIONAL {?2r dbo:thumbnail ?2thumbnail}.
+FILTER(langMatches(lang(?2n),"EN") && langMatches(lang(?2rn),"EN") && langMatches(lang(?2a),"EN") && REGEX(?2a ,"[Cc]heese") && ?2n=${input}).
+}
+}
+UNION
+{
+select distinct ?3cn
+				where {
+	?3f a dbo:Cheese.
+	?3f dbo:abstract ?3a.
+	?3f rdfs:label ?3n.
+	{?3f dbo:country ?3c}UNION
+	{?3f dbp:country ?3c}
+	?3c rdfs:label ?3cn.
+
+	FILTER(langMatches(lang(?3n),"EN") && langMatches(lang(?3a),"EN")  && langMatches(lang(?3cn),"EN") && REGEX(?3a ,"[Cc]heese") && ?3n=${input} ).
+	}
+
+}
+}
+
+
 ------------------------ liste pays avec des fromages
 
 select distinct ?cn 
@@ -364,3 +447,5 @@ select distinct ?inf
             }
 }
 }
+
+
