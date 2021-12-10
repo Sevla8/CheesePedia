@@ -169,6 +169,7 @@ function showResults(data) {
 	console.log('Results from https://dbpedia.org/:', data);
 
 	let i = 0;
+	var numCheese = 0;
 
 	let result = "<tr class='table-row'>";
 	data.results.bindings.forEach((cheese) => {
@@ -208,13 +209,18 @@ function showResults(data) {
 		result += '</a></td>';
 
 		++i;
+		numCheese++;
 
 		if (i == 4) {
 			result += "</r><tr class='table-row'>";
 			i = 0;
 		}
 	});
+	if (numCheese == 0){
+		result += "<td id='noResult'><p>Sorry, no cheese found.</p><img src='ressources/Jerry.gif'></td>";
+	}
 	result += "</tr>";
+	
 
 	document.getElementById("resultat").innerHTML = result;
 
