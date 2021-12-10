@@ -203,7 +203,7 @@ function showResults(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
 
-		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
+		result += '<p><a href=detail_cheese.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
 
 		result += '</td>';
 
@@ -669,6 +669,15 @@ function showAnimal(data) {
 		}
 	})
 
+}
+
+function detailOther(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	
+	if (urlParams.has('animal')) {
+		detailAnimal();
+	}
 }
 
 
