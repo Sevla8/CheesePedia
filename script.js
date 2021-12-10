@@ -326,26 +326,28 @@ function showDetails(data) {
 		}
 
 		var milk = "";
+		//Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
+		////'<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>'
 		if (cheese.Goat.value == 1) {
-			milk += "Goat, ";
+			milk += "<a href='detail_other.html?animal=Goat'/>Goat, ";
 		}
 		if (cheese.Cow.value == 1) {
-			milk += "Cow, ";
+			milk += "<a href='detail_other.html?animal=Cattle'/>Cow, ";
 		}
 		if (cheese.Sheep.value == 1) {
-			milk += "Sheep, ";
+			milk += "<a href='detail_other.html?animal=Sheep'/>Sheep, ";
 		}
 		if (cheese.Buffalo.value == 1) {
-			milk += "Buffalo, ";
+			milk += "<a href='detail_other.html?animal=Water_buffalo'/>Buffalo, ";
 		}
 		if (cheese.Donkeys.value == 1) {
-			milk += "Donkeys, ";
+			milk += "<a href='detail_other.html?animal=Donkey'/>Donkey, ";
 		}
 		if (cheese.Yak.value == 1) {
-			milk += "Yak, ";
+			milk += "<a href='detail_other.html?animal=Yak'/>Yak, ";
 		}
 		if (cheese.Moose.value == 1) {
-			milk += "Moose, ";
+			milk += "<a href='detail_other.html?animal=Moose'/>Moose, ";
 		}
 		if (milk == "") {
 			milk="-";
@@ -540,6 +542,62 @@ function parseCountries(data) {
 	document.getElementById("countryname").innerHTML = s;
 	
 }
+
+function detailAnimal(){
+	
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('animal')) {
+		var input = decodeURIComponent(urlParams.get('animal'));
+
+		//Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
+		console.log('Animal:', input);
+	}
+
+	var contenu_requete = `
+					select ?label, ?abstract, ?thumbnail
+		where{
+			dbr:${input} rdfs:label ?label;
+			dbo:abstract ?abstract;
+			dbo:thumbnail ?thumbnail.
+			FILTER(
+				langMatches(lang(?abstract),"EN") &&
+				langMatches(lang(?label),"EN")
+			)
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showAnimal(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function showAnimal(data) {
+	console.log("showanimal called");
+	
+
+	data.results.bindings.forEach((animal) => {
+		document.getElementById("name").innerHTML = animal.label.value;
+		document.getElementById("detail-block-left").innerHTML = animal.abstract.value;
+		if (animal.thumbnail) {
+			document.getElementById("img-detail").src =  animal.thumbnail.value;
+		}
+	})
+
+}
+
+
 
 
 
