@@ -1,4 +1,4 @@
-<!-- Resultats de recherche d'un thème-->
+<!-- Resultats de recherche d'autres choses que fromage -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,33 +6,32 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="Style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 	<title>Cheeseek</title>
 </head>
 
-<body>
 
-<div class = "subject">
-	<h2>France</h2>
-	<img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/250px-Flag_of_France.svg.png" alt="Image" style="width:100px;height:50px;">
+<div id="detail-container">
+	<div id="detail-block">
+		<div id="history-cheeseek">
+			<a id="link-history-img" href="javascript:history.go(-1)">
+				<img id="history-img" src="ressources/fleche1.png" alt="back">
+			</a>
+			<h1 id="name">-</h1>
+		</div>
+
+	</div>
 </div>
 
+<div id="main-div">
+	<div id="res-container">
+		<table id="resultat">
+		</table>
 
-<br/>
-<div class="results">
-	<div class="fromage-de-brebis">
-		<img src="https://www.petricorena.com/172-thickbox_default/demi-tomette-artisanale-basque-pur-brebis-arradoy.jpg" alt="Image" style="width:100px;height:100px;">
-		<p>Fromage de brebis</p>
 	</div>
-
-	<div class="camembert">
-		<img src="https://www.affiches-parisiennes.com/content/articles/27812/main_adobestock103343942-ld.jpg" alt="Image" style="width:100px;height:100px;">
-		<p>Camembert</p>
-	</div>
-
 </div>
-
 
 <script src="script.js"></script>
 
-</body>
 </html>

@@ -121,10 +121,20 @@ function searchCheeses() {
 	}
 	if (inputPasteurized != "") {
 		contenu_requete += `
-			?cheese dbp:pasteurized ?pasteurized .
-			FILTER(
-				REGEX(?pasteurized, "${inputPasteurized}", "i")
-			)
+			{
+				?cheese dbp:pasteurized ?pasteu1 .
+				FILTER(
+					REGEX(?pasteu1, "${inputPasteurized}|often|frequently|possibly|depends", "i")
+				)
+			}
+			UNION
+			{
+				?cheese dbp:pasteurised ?pasteu2 .
+				FILTER(
+					REGEX(?pasteu2, "${inputPasteurized}|often|frequently|possibly|depends", "i")
+				)
+
+			}
 		`;
 	}
 	contenu_requete += `
@@ -354,13 +364,13 @@ function showDetails(data) {
 
 		var texture = "";
 		if(cheese.SFirm.value == 1) {
-			texture += "SemiFirm, ";
+			texture += "Semi-Firm, ";
 		}
 		if (cheese.SHard.value == 1) {
-			texture += "SemiHard, ";
+			texture += "Semi-Hard, ";
 		}
 		if (cheese.SSoft.value == 1){
-			texture += "SemiSoft, ";
+			texture += "Semi-Soft, ";
 		}
 		if (cheese.Firm.value == 1) {
 			texture += "Firm, ";
@@ -417,8 +427,8 @@ function showDetails(data) {
 	});
 }
 
-function loadCountry(){
-	
+function loadCountry() {
+
   	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	if (urlParams.has('cheese')) {
@@ -456,7 +466,7 @@ function loadCountry(){
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-	
+
 }
 
 function showCountries(data) {
@@ -467,17 +477,69 @@ function showCountries(data) {
 
 		if(cheese.cn){
 			country += cheese.cn.value+", ";
-		}	
+		}
 	});
-	
+
 	if (country=="") {
 			country="-";
 	}else{
 		country = country.substring(0, country.length - 2);
 	}
-		
+
 	console.log(country)
 	document.getElementById("country").innerHTML = country;
+
+}
+
+function addCountryFilter(){
+	
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	var contenu_requete = `
+					select distinct ?cn 
+					 where {
+		?c a dbo:Country.
+		?f a dbo:Cheese.
+		?f dbo:abstract ?a. 
+		?f rdfs:label ?n.
+		?c rdfs:label ?cn.
+		{
+		?f dbp:country ?c.
+		}UNION{
+		?f dbp:country ?cn.
+		}
+		FILTER(langMatches(lang(?cn),"EN") &&langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") ).
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            parseCountries(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
 	
 }
+
+function parseCountries(data) {
+	var s = "";
+	//<option value="Cambridge">
+
+	data.results.bindings.forEach((country) => {
+		s += "<option value=\""+country.cn.value+"\">";
+	});
+	document.getElementById("countryname").innerHTML = s;
+	
+}
+
+
 
