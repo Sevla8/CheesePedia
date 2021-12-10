@@ -354,13 +354,13 @@ function showDetails(data) {
 
 		var texture = "";
 		if(cheese.SFirm.value == 1) {
-			texture += "SFirm, ";
+			texture += "SemiFirm, ";
 		}
 		if (cheese.SHard.value == 1) {
-			texture += "SHard, ";
+			texture += "SemiHard, ";
 		}
 		if (cheese.SSoft.value == 1){
-			texture += "SSoft, ";
+			texture += "SemiSoft, ";
 		}
 		if (cheese.Firm.value == 1) {
 			texture += "Firm, ";
