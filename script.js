@@ -361,7 +361,7 @@ function showRecipes(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/recipe.png"\" target="_blank"></p>';
 		}
 
-		// result += '<p><a href=detail.html?cheese=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
+		result += '<p><a href=detail_other.html?recipe=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
 
 		result += '</td>';
 	});
@@ -568,16 +568,16 @@ function showCountries(data) {
 }
 
 function addCountryFilter(){
-	
+
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 
 	var contenu_requete = `
-					select distinct ?cn 
+					select distinct ?cn
 					 where {
 		?c a dbo:Country.
 		?f a dbo:Cheese.
-		?f dbo:abstract ?a. 
+		?f dbo:abstract ?a.
 		?f rdfs:label ?n.
 		?c rdfs:label ?cn.
 		{
@@ -603,7 +603,7 @@ function addCountryFilter(){
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-	
+
 }
 
 function parseCountries(data) {
@@ -614,11 +614,11 @@ function parseCountries(data) {
 		s += "<option value=\""+country.cn.value+"\">";
 	});
 	document.getElementById("countryname").innerHTML = s;
-	
+
 }
 
 function detailAnimal(){
-	
+
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	if (urlParams.has('animal')) {
@@ -659,7 +659,7 @@ function detailAnimal(){
 
 function showAnimal(data) {
 	console.log("showanimal called");
-	
+
 
 	data.results.bindings.forEach((animal) => {
 		document.getElementById("name").innerHTML = animal.label.value;
@@ -670,6 +670,7 @@ function showAnimal(data) {
 	})
 
 }
+
 
 
 
