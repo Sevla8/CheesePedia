@@ -9,7 +9,7 @@ document.addEventListener('keypress', (event) => {
 }, false);
 
 // Affiche les filtres déjà sélectionnés
-if (sessionStorage.getItem("search") != "") document.getElementById("searchTxt").value = sessionStorage.getItem("search");
+if (sessionStorage.getItem("search") != "" && document.getElementById("searchTxt")) document.getElementById("searchTxt").value = sessionStorage.getItem("search");
 if (sessionStorage.getItem("certification") != "") document.getElementById("certificationFilters").value = sessionStorage.getItem("certification");
 if (sessionStorage.getItem("country") != "")document.getElementById("countryFilters").value = sessionStorage.getItem("country");
 if (sessionStorage.getItem("texture") != "") document.getElementById("textureFilters").value = sessionStorage.getItem("texture");
@@ -348,6 +348,13 @@ function loadRecipe() {
 function showRecipes(data) {
 	console.log('Recipes from https://dbpedia.org/:', data);
 
+	if (data.results.bindings.length != 0) {
+		document.getElementById('recipesTitle').style.display = 'block';
+	}
+	else {
+		document.getElementById('recipesTitle').style.display = 'none';
+	}
+
 	let result = "<tr class='table-row'>";
 	data.results.bindings.forEach((recipe) => {
 		result += '<td class="table-cell cell-content" id="' + recipe.recipe_label.value + '">';
@@ -617,6 +624,18 @@ function parseCountries(data) {
 
 }
 
+function detailOther(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	if (urlParams.has('animal')) {
+		detailAnimal();
+	}
+	if (urlParams.has('recipe')) {
+		detailRecipe();
+	}
+}
+
 function detailAnimal(){
 
 	const queryString = window.location.search;
@@ -671,17 +690,45 @@ function showAnimal(data) {
 
 }
 
-function detailOther(){
+function detailRecipe(){
+
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
-	
-	if (urlParams.has('animal')) {
-		detailAnimal();
+	if (urlParams.has('recipe')) {
+		var input = decodeURIComponent(urlParams.get('recipe'));
+
+		console.log('Recipe:', input);
 	}
+
+	var contenu_requete = `
+
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showRecipe(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
 }
 
+function showRecipe(data) {
+	data.results.bindings.forEach((recipe) => {
+		document.getElementById("name").innerHTML = recipe.label.value;
+		document.getElementById("detail-block-left").innerHTML = recipe.abstract.value;
+		if (animal.thumbnail) {
+			document.getElementById("img-detail").src =  recipe.thumbnail.value;
+		}
+	})
 
-
-
+}
 
 
