@@ -121,10 +121,20 @@ function searchCheeses() {
 	}
 	if (inputPasteurized != "") {
 		contenu_requete += `
-			?cheese dbp:pasteurized ?pasteurized .
-			FILTER(
-				REGEX(?pasteurized, "${inputPasteurized}", "i")
-			)
+			{
+				?cheese dbp:pasteurized ?pasteu1 .
+				FILTER(
+					REGEX(?pasteu1, "${inputPasteurized}|often|frequently|possibly|depends", "i")
+				)
+			}
+			UNION
+			{
+				?cheese dbp:pasteurised ?pasteu2 .
+				FILTER(
+					REGEX(?pasteu2, "${inputPasteurized}|often|frequently|possibly|depends", "i")
+				)
+
+			}
 		`;
 	}
 	contenu_requete += `
@@ -354,13 +364,13 @@ function showDetails(data) {
 
 		var texture = "";
 		if(cheese.SFirm.value == 1) {
-			texture += "SemiFirm, ";
+			texture += "Semi-Firm, ";
 		}
 		if (cheese.SHard.value == 1) {
-			texture += "SemiHard, ";
+			texture += "Semi-Hard, ";
 		}
 		if (cheese.SSoft.value == 1){
-			texture += "SemiSoft, ";
+			texture += "Semi-Soft, ";
 		}
 		if (cheese.Firm.value == 1) {
 			texture += "Firm, ";
@@ -417,8 +427,8 @@ function showDetails(data) {
 	});
 }
 
-function loadCountry(){
-	
+function loadCountry() {
+
   	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	if (urlParams.has('cheese')) {
@@ -456,7 +466,7 @@ function loadCountry(){
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-	
+
 }
 
 function showCountries(data) {
@@ -467,17 +477,17 @@ function showCountries(data) {
 
 		if(cheese.cn){
 			country += cheese.cn.value+", ";
-		}	
+		}
 	});
-	
+
 	if (country=="") {
 			country="-";
 	}else{
 		country = country.substring(0, country.length - 2);
 	}
-		
+
 	console.log(country)
 	document.getElementById("country").innerHTML = country;
-	
+
 }
 
