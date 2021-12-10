@@ -2,7 +2,7 @@
 	--main-res-color: #DDDDDD;
 	--main-orange: #9c7513;
 }
-html, 
+html,
 body {
     height: 100%;
 	width: 100%;
@@ -18,7 +18,7 @@ body {
 	vertical-align:top;
 	margin:0 2% 0 0;
 	width:45%;
-	font: 16px "Times new roman", sans-serif; 
+	font: 16px "Times new roman", sans-serif;
 	line-height: 150%;
 	text-align: justify;
 }
@@ -42,7 +42,7 @@ body {
 	margin:4% 0;
 }
 #main-container{
-	background-image: url(ressources/cheeseBG1.png),url(ressources/cheeseBG2.png);	
+	background-image: url(ressources/cheeseBG1.png),url(ressources/cheeseBG2.png);
 	background-position: 0% 0%, 100% 0%;
 	background-size: 30%,30%;
 	background-repeat: no-repeat, no-repeat;
@@ -50,7 +50,7 @@ body {
 	width: 100%;
 }
 #detail-container{
-	background-image: url(ressources/cheeseBG1.png),url(ressources/cheeseBG2.png);	
+	background-image: url(ressources/cheeseBG1.png),url(ressources/cheeseBG2.png);
 	background-position: -10% 0%, 110% 0%;
 	background-size: 40%,40%;
 	background-repeat: no-repeat, no-repeat;
@@ -131,7 +131,7 @@ body {
 	background-color: #CCCCCC;
 	color: #444444;
 	border: 0;
-	
+
 }
 #searchTxt2{
 	border-radius: 1em;
@@ -143,7 +143,7 @@ body {
 	background-color: #CCCCCC;
 	color: #444444;
 	border: 0;
-	
+
 }
 
 .searchBar{
@@ -247,4 +247,9 @@ option[value=""][disabled] {
 }
 option {
   color: black;
+}
+
+#detail-block-bottom {
+    overflow-x: auto;
+    white-space: nowrap;
 }
