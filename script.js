@@ -552,7 +552,7 @@ function showCountries(data) {
 	data.results.bindings.forEach((cheese) => {
 
 		if(cheese.cn){
-			country += cheese.cn.value+", ";
+			country += "<a href='detail_other.html?country="+cheese.cn.value+"'/>"+cheese.cn.value+", ";
 		}
 	});
 
@@ -678,6 +678,69 @@ function detailOther(){
 	if (urlParams.has('animal')) {
 		detailAnimal();
 	}
+	if(urlParams.has('country')){
+		detailCountry();
+	}
+}
+
+function detailCountry(){
+	
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('country')) {
+		var input = decodeURIComponent(urlParams.get('country'));
+		inputLabel = "\""+input+"\"@en";
+		console.log('Country:', input);
+	}
+
+	var contenu_requete = `
+					select distinct ?cn ?t ?d ?capitalname
+             where {
+			?c a dbo:Country.
+			?c rdfs:label ?cn.
+			?c rdfs:comment ?d.
+			?c dbp:capital ?capital.
+			?capital rdfs:label ?capitalname.
+			OPTIONAL{?c dbo:thumbnail ?t}.
+			FILTER(langMatches(lang(?cn),"EN")  &&  langMatches(lang(?d),"EN") && langMatches(lang(?capitalname),"EN") && ?cn=${inputLabel} ).
+			}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showDetailCountry(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function showDetailCountry(data) {
+
+	data.results.bindings.forEach((country) => {
+		document.getElementById("name").innerHTML = country.cn.value;
+		document.getElementById("detail-block-left").innerHTML = country.d.value;
+		var colRight="";
+		if (country.t) {
+			colRight += '<p class="thumbnail"><img class="img-result" src="' + country.t.value + '" alt="' + country.cn.value + '" onerror="this.onerror=null; this.src=\'ressources/defaultImg.png\'" target="_blank"></p>';
+		}
+		else {
+			colRight += '<p class="thumbnail"><img class="img-result" src="ressources/recipe.png"\" target="_blank"></p>';
+		}
+		colRight+="<p class='det-col2' id='capital'>Capital : "+country.capitalname.value+"</p>";
+
+		document.getElementById("detail-block-right").innerHTML = colRight;
+		console.log(colRight);
+		
+	})
+
 }
 
 
