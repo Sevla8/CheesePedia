@@ -1,13 +1,14 @@
 <!-- Resultats de recherche de fromage -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="Style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+	<title>Cheeseek</title>
 </head>
 
 <body onload="searchCheeses();">
@@ -21,15 +22,13 @@
 	<div id="search-div">
 		<div class="search-searchBar">
 		  <input type="text" id="searchTxt2" placeholder="Search.." data-autocomplete="true">
-		  <!--<button type="button" onClick="search()">Rechercher</button>-->
-		  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()">
+		  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()" alt="search">
 		</div>
 	</div>
 	<div id="search-filt">
 
 		  <select name="certification" id="certificationFilters" >
-			<option value="" disabled selected>Certification</option>
-			<option label="All certifications"></option>
+			<option value="" selected>All Certifications</option>
 			<option value="AOC">AOC</option>
 			<option value="AOP">AOP</option>
 			<option value="PDO">PDO</option>
@@ -37,8 +36,7 @@
 		  </select>
 
 		  <select name="texture" id="textureFilters" >
-			<option value="" disabled selected>Texture</option>
-			<option label="All textures"></option>
+			<option value="" selected>All Textures</option>
 			<option value="Semi-Firm">Semi-Firm</option>
 			<option value="Semi-Hard">Semi-Hard</option>
 			<option value="Semi-Soft">Semi-Soft</option>
@@ -56,8 +54,7 @@
 		  </select>
 
 		  <select name="source" id="sourceFilters" >
-			<option value="" disabled selected>Source</option>
-			<option label="All sources"></option>
+			<option value="" selected>All Sources</option>
 			<option value="Goat">Goat</option>
 			<option value="Cow">Cow</option>
 			<option value="Sheep">Sheep</option>

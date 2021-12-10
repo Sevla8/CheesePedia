@@ -1,18 +1,18 @@
 <!-- Detail sur un fromage -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="Style.css">
-
+	<title>Cheeseek</title>
 </head>
 
 
 
-<body onload="loadDetail();">
+<body onload="loadDetail(); loadCountry();">
 
 <div id="main-div">
 	<div id="res-container">
@@ -26,17 +26,17 @@
 	<div id="detail-block">
 		<div id="history-cheeseek">
 			<a id="link-history-img" href="javascript:history.go(-1)">
-				<img id="history-img" src="ressources/fleche1.png">
+				<img id="history-img" src="ressources/fleche1.png" alt="back">
 			</a>
 			<h1 id="name">-</h1>
 		</div>
-		
+
 		<div id="detail-block-left">
 			-</div>
 		<div id="detail-block-right">
-			
+
 			<img id="img-detail" src="ressources/defaultImg.png" onerror = "this.onerror=null;this.src='ressources/defaultImg.png';" alt="Image" >
-			
+
 			<p class="det-col1">Country: </p>
 			<p class="det-col2" id="country">-</p>
 			<p class="det-col1">Certification: </p>
