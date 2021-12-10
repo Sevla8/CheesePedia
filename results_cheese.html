@@ -21,14 +21,14 @@
 
 	<div id="search-div">
 		<div class="search-searchBar">
-		  <input type="text" id="searchTxt" placeholder="Search..">
+		  <input type="text" id="searchTxt2" placeholder="Search.." data-autocomplete="true">
 		  <img id="loupeLogo2" src="ressources/loupe.png" onclick="search()" alt="search">
 		</div>
 	</div>
 	<div id="search-filt">
 
 		  <select name="certification" id="certificationFilters" >
-			<option value="" selected>Certification</option>
+			<option value="" selected>All Certifications</option>
 			<option value="AOC">AOC</option>
 			<option value="AOP">AOP</option>
 			<option value="PDO">PDO</option>
@@ -36,7 +36,7 @@
 		  </select>
 
 		  <select name="texture" id="textureFilters" >
-			<option value="" selected>Texture</option>
+			<option value="" selected>All Textures</option>
 			<option value="Semi-Firm">Semi-Firm</option>
 			<option value="Semi-Hard">Semi-Hard</option>
 			<option value="Semi-Soft">Semi-Soft</option>
@@ -54,7 +54,7 @@
 		  </select>
 
 		  <select name="source" id="sourceFilters" >
-			<option value="" selected>Source</option>
+			<option value="" selected>All Sources</option>
 			<option value="Goat">Goat</option>
 			<option value="Cow">Cow</option>
 			<option value="Sheep">Sheep</option>
@@ -65,17 +65,27 @@
 		  </select>
 
 		  <select name="pasteurized" id="pasteurizedFilters" >
-			<option value="" selected>Pasteurized</option>
+			<option value="" disabled selected>Pasteurized</option>
+			<option label="Pasteurized"></option>
 			<option value="Yes">Yes</option>
 			<option value="No">No</option>
 		  </select>
-
-		  <select name="country" id="countryFilters" >
-			<option value="" selected>Country</option>
+		  
+		  <!--<select name="country" id="countryFilters" >
+			<option value="" disabled selected>Country</option>
+			<option label="All countries"></option>
 			<option value="Denmark">Denmark</option>
 			<option value="France">France</option>
 			<option value="Italia">Italy</option>
-		  </select>
+		  </select>-->
+		  
+		  <input type="text" id="searchTxt3" name="Country" list="countryname" placeholder="Country">
+			<datalist id="countryname">
+			  <option value="Boston">
+			  <option value="Cambridge">
+			</datalist>
+			
+			
 	</div>
 </div>
 <div id="main-div">
