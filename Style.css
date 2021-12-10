@@ -221,7 +221,7 @@ body {
 #loupeLogo:active{
 	opacity:0.5;
 }
-select, #searchTxt3{
+select, #countryFilters{
 	background-color: #CCCCCC;
 	padding:0.5em 0.5em 0.5em 0.5em;
 	width: 15%;
