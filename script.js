@@ -134,7 +134,7 @@ function searchCheeses() {
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var results = JSON.parse(this.responseText);
-            afficherResultats(results);
+            showResults(results);
         }
     };
     xmlhttp.open("GET", url, true);
@@ -142,7 +142,7 @@ function searchCheeses() {
 }
 
 // Affichage des résultats dans un tableau
-function afficherResultats(data) {
+function showResults(data) {
 	console.log('Results from https://dbpedia.org/:', data);
 
 	let i = 0;
@@ -266,7 +266,7 @@ function loadDetail() {
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var results = JSON.parse(this.responseText);
-            afficherDetails(results);
+            showDetails(results);
         }
     };
     xmlhttp.open("GET", url, true);
@@ -277,7 +277,7 @@ function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function afficherDetails(data) {
+function showDetails(data) {
 	console.log('Detail from https://dbpedia.org/:', data);
 
 	data.results.bindings.forEach((cheese) => {
@@ -403,3 +403,68 @@ function afficherDetails(data) {
 		}
 	});
 }
+
+function loadCountry(){
+	
+  	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('cheese')) {
+		var inputLabel = decodeURIComponent(urlParams.get('cheese'));
+
+		inputLabel = "\""+inputLabel+"\"@en";
+		console.log('Country of cheese:', inputLabel);
+	}
+
+	var contenu_requete = `
+			select distinct ?cn
+					where {
+		?f a dbo:Cheese.
+		?f dbo:abstract ?a.
+		?f rdfs:label ?n.
+		{?f dbo:country ?c}UNION
+		{?f dbp:country ?c}
+		?c rdfs:label ?cn.
+
+		FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN")  && langMatches(lang(?cn),"EN") && REGEX(?a ,"[Cc]heese") && ?n=${inputLabel}).
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showCountries(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+	
+}
+
+function showCountries(data) {
+	console.log('Detail from https://dbpedia.org/:', data);
+	var country = "";
+
+	data.results.bindings.forEach((cheese) => {
+
+		if(cheese.cn){
+			country += cheese.cn.value+", ";
+		}	
+	});
+	
+	if (country=="") {
+			country="-";
+	}else{
+		country = country.substring(0, country.length - 2);
+	}
+		
+	console.log(country)
+	document.getElementById("country").innerHTML = country;
+	
+}
+
