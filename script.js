@@ -8,26 +8,39 @@ document.addEventListener('keypress', (event) => {
 	}
 }, false);
 
+// Affiche les filtres déjà sélectionnés
+if (sessionStorage.getItem("search") != "") document.getElementById("searchTxt").value = sessionStorage.getItem("search");
+if (sessionStorage.getItem("certification") != "") document.getElementById("certificationFilters").value = sessionStorage.getItem("certification");
+if (sessionStorage.getItem("country") != "")document.getElementById("countryFilters").value = sessionStorage.getItem("country");
+if (sessionStorage.getItem("texture") != "") document.getElementById("textureFilters").value = sessionStorage.getItem("texture");
+if (sessionStorage.getItem("source") != "") document.getElementById("sourceFilters").value = sessionStorage.getItem("source");
+if (sessionStorage.getItem("pasteurized") != "") document.getElementById("pasteurizedFilters").value = sessionStorage.getItem("pasteurized");
+
 // Construit la l'URL de la page
 function search() {
 	let searchTxt = document.getElementById("searchTxt").value;
 	searchTxt = encodeURIComponent(searchTxt);
+	sessionStorage.setItem("search", searchTxt);
 
 	let certificationTxt = document.getElementById("certificationFilters").value;
 	certificationTxt = encodeURIComponent(certificationTxt);
+	sessionStorage.setItem("certification", certificationTxt);
 
 	let countryTxt = document.getElementById("countryFilters").value;
 	countryTxt = encodeURIComponent(countryTxt);
+	sessionStorage.setItem("country", countryTxt);
 
 	let textureTxt = document.getElementById("textureFilters").value;
 	textureTxt = encodeURIComponent(textureTxt);
+	sessionStorage.setItem("texture", textureTxt);
 
 	let sourceTxt = document.getElementById("sourceFilters").value;
 	sourceTxt = encodeURIComponent(sourceTxt);
+	sessionStorage.setItem("source", sourceTxt);
 
 	let pasteurizedTxt = document.getElementById("pasteurizedFilters").value;
 	pasteurizedTxt = encodeURIComponent(pasteurizedTxt);
-
+	sessionStorage.setItem("pasteurized", pasteurizedTxt);
 
 	location.href = `./results_cheese.html?search=${searchTxt}&certification=${certificationTxt}&country=${countryTxt}&texture=${textureTxt}&source=${sourceTxt}&pasteurized=${pasteurizedTxt}`;
 }
