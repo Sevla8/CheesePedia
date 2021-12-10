@@ -174,7 +174,7 @@ function showResults(data) {
 	data.results.bindings.forEach((cheese) => {
 		result += '<td class="table-cell cell-content" id="' + cheese.label.value + '">';
 
-		result += '<a class="caseLink" href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '><h3 class="name">' + cheese.label.value + '</h3>';
+		result += '<a class="caseLink" href=detail_cheese.html?cheese=' + encodeURIComponent(cheese.label.value) + '><h3 class="name">' + cheese.label.value + '</h3>';
 
 		if (cheese.country) result += '<p class="country"><em>Country: </em>' + cheese.country.value + '</p>';
 
@@ -636,6 +636,7 @@ function detailOther(){
 	}
 	if(urlParams.has('country')){
 		detailCountry();
+		loadCountryCheeses();
 	}
 }
 
@@ -703,8 +704,48 @@ function detailRecipe(){
 		console.log('Recipe:', input);
 	}
 
-	var contenu_requete = `
 
+	var contenu_requete = `
+		SELECT * WHERE
+	{ 
+	{
+		 select distinct ?rn ?thumbnail ?cn ?an 
+				 where {
+					  ?r dbo:ingredient [].
+					  ?r rdfs:label ?rn.
+					  ?r dbp:country ?c.
+					  ?c rdfs:label ?cn.
+					  OPTIONAL {?r dbo:thumbnail ?thumbnail}.
+					  FILTER( langMatches(lang(?rn),"EN") && langMatches(lang(?cn),"EN")  && 
+					  ?rn=${input} ).
+					 ?r dbo:abstract ?an.
+					 FILTER(langMatches(lang(?an),"EN")).
+			  }
+	}
+	UNION
+	{
+	select distinct ?if
+				 where {
+					  ?if a dbo:Cheese.
+					   ?if dbo:abstract ?a.
+					   ?if rdfs:label ?n.
+					   ?2r dbo:ingredient ?if.
+					   ?2r rdfs:label ?2rn.
+					   FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?2rn),"EN") &&  langMatches(lang(?a),"EN") && 
+					  REGEX(?a ,"[Cc]heese") && ?2rn=${input} ).
+				}
+	}
+	UNION
+	{
+	select distinct ?inf
+				 where {
+					   ?3r dbo:ingredient ?inf.
+					   ?3r rdfs:label ?3rn.
+					   filter not exists { ?inf rdf:type dbo:Cheese }
+					   FILTER( langMatches(lang(?3rn),"EN") &&  ?3rn=${input} ).
+				}
+	}
+	}
 	`;
 
 	// Encodage de l'URL à transmettre à DBPedia
@@ -846,9 +887,10 @@ function showCountryCheeses(data) {
 		else {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
-
+		result += '<p><a href=detail_cheese.html?cheese=' + encodeURIComponent(cheese.n.value) + '>More details</a></p>';
 		result += '</td>';
 	});
+	
 	result += "</tr>";
 
 	document.getElementById('bottom').innerHTML = result;
