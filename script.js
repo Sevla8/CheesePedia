@@ -174,7 +174,7 @@ function showResults(data) {
 	data.results.bindings.forEach((cheese) => {
 		result += '<td class="table-cell cell-content" id="' + cheese.label.value + '">';
 
-		result += '<h3 class="name">' + cheese.label.value + '</h3>';
+		result += '<a class="caseLink" href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '><h3 class="name">' + cheese.label.value + '</h3>';
 
 		if (cheese.country) result += '<p class="country"><em>Country: </em>' + cheese.country.value + '</p>';
 
@@ -203,9 +203,9 @@ function showResults(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
 
-		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
+		//result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
 
-		result += '</td>';
+		result += '</a></td>';
 
 		++i;
 
