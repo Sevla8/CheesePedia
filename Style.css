@@ -145,6 +145,7 @@ body {
 	border: 0;
 
 }
+
 .searchBar{
 	display:flex;
 	justify-content:center;
@@ -177,8 +178,9 @@ body {
 	display:inline-block;
 }
 #search-filt{
+	
 	display:inline-block;
-	width: 30%;
+	width: 50%;
 }
 .table-row{
 	display: table-row;
@@ -219,9 +221,10 @@ body {
 #loupeLogo:active{
 	opacity:0.5;
 }
-select{
+select, #countryFilters{
 	background-color: #CCCCCC;
 	padding:0.5em 0.5em 0.5em 0.5em;
+	width: 15%;
 	margin: 0 2% 0 2%;
 	border: 0;
 	border-radius: 0.5em;

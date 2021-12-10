@@ -565,3 +565,55 @@ function showCountries(data) {
 
 }
 
+function addCountryFilter(){
+	
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	var contenu_requete = `
+					select distinct ?cn 
+					 where {
+		?c a dbo:Country.
+		?f a dbo:Cheese.
+		?f dbo:abstract ?a. 
+		?f rdfs:label ?n.
+		?c rdfs:label ?cn.
+		{
+		?f dbp:country ?c.
+		}UNION{
+		?f dbp:country ?cn.
+		}
+		FILTER(langMatches(lang(?cn),"EN") &&langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") ).
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            parseCountries(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+	
+}
+
+function parseCountries(data) {
+	var s = "";
+	//<option value="Cambridge">
+
+	data.results.bindings.forEach((country) => {
+		s += "<option value=\""+country.cn.value+"\">";
+	});
+	document.getElementById("countryname").innerHTML = s;
+	
+}
+
+
+
