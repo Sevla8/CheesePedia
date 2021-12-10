@@ -220,14 +220,15 @@ GROUP BY ?f ?a ?n ?thumbnail
 
 
 
--------------------------------------------
-select distinct ?rn
+------------------------------------------- plats par fromage
+select distinct ?rn ?thumbnail
              where {
 ?f a dbo:Cheese.
 ?f dbo:abstract ?a.
 ?f rdfs:label ?n.
 ?r dbo:ingredient ?f.
 ?r rdfs:label ?rn
+OPTIONAL {?r dbo:thumbnail ?thumbnail}.
 FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?rn),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n="Paneer"@en).
 }
 
