@@ -22,55 +22,55 @@
 			</div>
 
 			<br/>
-			<select name="certification" id="certificationFilters">
-				<option value="" selected>Certification</option>
-				<option value="AOC">AOC</option>
-				<option value="AOP">AOP</option>
-				<option value="PDO">PDO</option>
-				<option value="DOC">DOC</option>
-			</select>
+				  <select name="certification" id="certificationFilters" >
+					<option value="" selected>All Certifications</option>
+					<option value="AOC">AOC</option>
+					<option value="AOP">AOP</option>
+					<option value="PDO">PDO</option>
+					<option value="DOC">DOC</option>
+				  </select>
 
-			<select name="country" id="countryFilters">
-				<option value="" selected>Country</option>
-				<option value="Denmark">Denmark</option>
-				<option value="France">France</option>
-				<option value="Italy">Italy</option>
-			</select>
 
-			<select name="texture" id="textureFilters">
-				<option value="" selected>Texture</option>
-				<option value="Semi-Firm">Semi-Firm</option>
-				<option value="Semi-Hard">Semi-Hard</option>
-				<option value="Semi-Soft">Semi-Soft</option>
-				<option value="Firm">Firm</option>
-				<option value="Soft">Soft</option>
-				<option value="Hard">Hard</option>
-				<option value="Crumbly">Crumbly</option>
-				<option value="Creamy">Creamy</option>
-				<option value="Compact">Compact</option>
-				<option value="Granular">Granular</option>
-				<option value="Moist">Moist</option>
-				<option value="Elastic">Elastic</option>
-				<option value="Stringy">Stringy</option>
-				<option value="Smooth">Smooth</option>
-			</select>
+				  <select name="texture" id="textureFilters" >
+					<option value="" selected>All Textures</option>
+					<option value="Semi-Firm">Semi-Firm</option>
+					<option value="Semi-Hard">Semi-Hard</option>
+					<option value="Semi-Soft">Semi-Soft</option>
+					<option value="Firm">Firm</option>
+					<option value="Soft">Soft</option>
+					<option value="Hard">Hard</option>
+					<option value="Crumbly">Crumbly</option>
+					<option value="Creamy">Creamy</option>
+					<option value="Compact">Compact</option>
+					<option value="Granular">Granular</option>
+					<option value="Moist">Moist</option>
+					<option value="Elastic">Elastic</option>
+					<option value="Stringy">Stringy</option>
+					<option value="Smooth">Smooth</option>
+				  </select>
 
-			<select name="source" id="sourceFilters">
-				<option value="" selected>Source</option>
-				<option value="Goat">Goat</option>
-				<option value="Cow">Cow</option>
-				<option value="Sheep">Sheep</option>
-				<option value="Buffalo">Buffalo</option>
-				<option value="Donkeys">Donkeys</option>
-				<option value="Yak">Yak</option>
-				<option value="Moose">Moose</option>
-			</select>
+				  <select name="source" id="sourceFilters" >
+					<option value="" selected>All Sources</option>
+					<option value="Goat">Goat</option>
+					<option value="Cow">Cow</option>
+					<option value="Sheep">Sheep</option>
+					<option value="Buffalo">Buffalo</option>
+					<option value="Donkeys">Donkeys</option>
+					<option value="Yak">Yak</option>
+					<option value="Moose">Moose</option>
+				  </select>
 
-			<select name="pasteurized" id="pasteurizedFilters">
-				<option value="" selected>Pasteurized</option>
-				<option value="Yes">Yes</option>
-				<option value="No">No</option>
-			</select>
+				  <select name="pasteurized" id="pasteurizedFilters" >
+					<option value="" disabled selected>Pasteurized</option>
+					<option label="Pasteurized"></option>
+					<option value="Yes">Yes</option>
+					<option value="No">No</option>
+				  </select>
+				  
+				  
+				  <input type="text" id="countryFilters" name="Country" list="countryname" placeholder="Country">
+					<datalist id="countryname">
+					</datalist>
 		</div>
 	</div>
 	<script src="script.js"></script>
