@@ -161,7 +161,7 @@
 		}
 	}
 	ORDER BY ASC(?label)
----------------------------------------------------------------------
+--------------------------------------------------------------------- details d'un fromage
 	select ?f ?a ?n ?thumbnail  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC
               sum(if(regex(?c,"AOP"),1,0)) as ?AOP
               sum(if(regex(?c,"P.*D.*O"),1,0)) as ?PDO
@@ -205,7 +205,7 @@ OPTIONAL {?f dbo:thumbnail ?thumbnail}.
 FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n=${inputLabel}).
 }
 GROUP BY ?f ?a ?n ?thumbnail
-------------------------------------------
+------------------------------------------ liste pays d'un fromage
 	select distinct ?cn
 				where {
 	?f a dbo:Cheese.
@@ -251,17 +251,35 @@ select distinct ?cn
 FILTER(langMatches(lang(?cn),"EN") &&langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") ).
 }
 
-------------------------- requete pour un animal
 
-Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
-
-select ?label, ?abstract, ?thumbnail
-where{
-	dbr:${input} rdfs:label ?label;
-	dbo:abstract ?abstract;
-	dbo:thumbnail ?thumbnail.
-	FILTER(
-		langMatches(lang(?abstract),"EN") &&
-		langMatches(lang(?label),"EN")
-	)
+------------------------- details pays
+select distinct ?cn ?t ?d ?capitalname 
+             where {
+?c a dbo:Country.
+?c rdfs:label ?cn.
+?c rdfs:comment ?d.
+?c dbp:capital ?capital.
+?capital rdfs:label ?capitalname.
+OPTIONAL{?c dbo:thumbnail ?t}.
+FILTER(langMatches(lang(?cn),"EN")  &&  langMatches(lang(?d),"EN") && langMatches(lang(?capitalname),"EN") && ?cn="Poland"@en ).
 }
+
+-------------------------------liste fromages par pays
+
+select distinct ?f
+             where {
+?c a dbo:Country.
+?f a dbo:Cheese.
+?f dbo:abstract ?a. 
+?f rdfs:label ?n.
+?c rdfs:label ?cn.
+{
+?f dbp:country ?c.
+}UNION{
+?f dbp:country ?cn.
+}
+FILTER(langMatches(lang(?cn),"EN") &&langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?cn="France"@en ).
+}
+
+
+
