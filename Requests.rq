@@ -221,12 +221,21 @@ GROUP BY ?f ?a ?n ?thumbnail
 
 
 -------------------------------------------
-select distinct ?rn
-             where {
-?f a dbo:Cheese.
-?f dbo:abstract ?a.
-?f rdfs:label ?n.
-?r dbo:ingredient ?f.
-?r rdfs:label ?rn
-FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?rn),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?n="Paneer"@en).
+SELECT DISTINCT ?recipe_label AS ?label, ?recipe_thumbnail AS thumbnail
+WHERE {
+	?cheese a dbo:Cheese;
+			dbo:abstract ?abstract ;
+			rdfs:label ?cheese_label .
+	?recipe dbo:ingredient ?cheese ;
+			rdfs:label ?recipe_label .
+	FILTER(
+		langMatches(lang(?cheese_label), "EN") &&
+		langMatches(lang(?recipe_label), "EN") &&
+		langMatches(lang(?abstract), "EN") &&
+		REGEX(?abstract , "cheese", "i") &&
+		?cheese_label = "Paneer"@en
+	)
+	OPTIONAL {
+		?recipe dbo:thumbnail ?recipe_thumbnail .
+	}
 }
