@@ -294,6 +294,80 @@ function loadDetail() {
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
+
+	loadRecipe();
+}
+
+function loadRecipe() {
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('cheese')) {
+		var inputLabel = decodeURIComponent(urlParams.get('cheese'));
+
+		inputLabel = "\""+inputLabel+"\"@en";
+		console.log('Detail of cheese:', inputLabel);
+	}
+
+	var contenu_requete = `
+		SELECT DISTINCT ?recipe_label ?recipe_thumbnail
+		WHERE {
+			?cheese a dbo:Cheese;
+					dbo:abstract ?abstract;
+					rdfs:label ?cheese_label.
+			?recipe dbo:ingredient ?cheese;
+					rdfs:label ?recipe_label.
+			FILTER(
+				langMatches(lang(?cheese_label), "EN") &&
+				langMatches(lang(?recipe_label), "EN") &&
+				langMatches(lang(?abstract), "EN") &&
+				REGEX(?abstract , "cheese", "i") &&
+				?cheese_label = ${inputLabel}
+			)
+			OPTIONAL {
+				?recipe dbo:thumbnail ?recipe_thumbnail .
+			}
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showRecipes(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function showRecipes(data) {
+	console.log('Recipes from https://dbpedia.org/:', data);
+
+	let result = "<tr class='table-row'>";
+	data.results.bindings.forEach((recipe) => {
+		result += '<td class="table-cell cell-content" id="' + recipe.recipe_label.value + '">';
+
+		result += '<h3 class="name">' + recipe.recipe_label.value + '</h3>';
+
+		if (recipe.recipe_thumbnail) {
+			result += '<p class="thumbnail"><img class="img-result" src="' + recipe.recipe_thumbnail.value + '" alt="' + recipe.recipe_label.value + '" onerror="this.onerror=null; this.src=\'ressources/defaultImg.png\'" target="_blank"></p>';
+		}
+		else {
+			result += '<p class="thumbnail"><img class="img-result" src="ressources/recipe.png"\" target="_blank"></p>';
+		}
+
+		// result += '<p><a href=detail.html?cheese=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
+
+		result += '</td>';
+	});
+	result += "</tr>";
+
+	document.getElementById('recipes').innerHTML = result;
 }
 
 function capitalizeFirstLetter(string) {
