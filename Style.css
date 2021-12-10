@@ -190,8 +190,8 @@ body {
 .cell-content{
 	border-radius: 20px;
 	width: 100%;
-	height: 400px;
-	padding: 10px;
+	height: 300px;
+	padding: 10px; 
 	background-image: url(ressources/wood-texture2.png);
 	text-align: center;
 }
@@ -205,6 +205,14 @@ body {
 	display: table-cell;
 	background-color: var(--main-res-color);
 	width: 25%;
+}
+.caseLink{
+	text-decoration:none;
+	color: var(--main-orange);
+	margin:0;
+	padding:0;
+	width:100%;
+	height:100%;
 }
 #loupeLogo{
 	width:4%;
