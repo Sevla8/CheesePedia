@@ -319,3 +319,48 @@ OPTIONAL{?f dbo:thumbnail ?thumbnail.}
 FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?cn=${inputPays} && REGEX(?t,${inputTexture},"i") && REGEX(?t,${inputTexture2},"i") ).
 }
 
+--------------------------------page details d'une recette :
+-remplacer ${input} par le nom du pays
+- les champs if correspondent aux ingredients fromagés, donc il faut des hyper liens vers les pages de fromage
+- les champs inf correspondent aux ingredients non fromagés
+
+SELECT * WHERE
+{ 
+{
+     select distinct ?rn ?thumbnail ?cn ?an 
+             where {
+                  ?r dbo:ingredient [].
+                  ?r rdfs:label ?rn.
+                  ?r dbp:country ?c.
+                  ?c rdfs:label ?cn.
+                  OPTIONAL {?r dbo:thumbnail ?thumbnail}.
+                  FILTER( langMatches(lang(?rn),"EN") && langMatches(lang(?cn),"EN")  && 
+                  ?rn=${input} ).
+                 ?r dbo:abstract ?an.
+                 FILTER(langMatches(lang(?an),"EN")).
+          }
+}
+UNION
+{
+select distinct ?if
+             where {
+                  ?if a dbo:Cheese.
+                   ?if dbo:abstract ?a.
+                   ?if rdfs:label ?n.
+                   ?2r dbo:ingredient ?if.
+                   ?2r rdfs:label ?2rn.
+                   FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?2rn),"EN") &&  langMatches(lang(?a),"EN") && 
+                  REGEX(?a ,"[Cc]heese") && ?2rn=${input} ).
+            }
+}
+UNION
+{
+select distinct ?inf
+             where {
+                   ?3r dbo:ingredient ?inf.
+                   ?3r rdfs:label ?3rn.
+                   filter not exists { ?inf rdf:type dbo:Cheese }
+                   FILTER( langMatches(lang(?3rn),"EN") &&  ?3rn=${input} ).
+            }
+}
+}
