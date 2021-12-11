@@ -408,6 +408,7 @@ FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[C
 - les champs if correspondent aux ingredients fromagés, donc il faut des hyper liens vers les pages de fromage
 - les champs inf correspondent aux ingredients non fromagés
 
+
 SELECT * WHERE
 { 
 {
@@ -432,7 +433,7 @@ SELECT * WHERE
 }
 UNION
 {
-select distinct ?if 
+select distinct ?n
              where {
                   ?if a dbo:Cheese.
                    ?if dbo:abstract ?a.
@@ -445,12 +446,13 @@ select distinct ?if
 }
 UNION
 {
-select distinct ?inf
+select distinct ?infn
              where {
                    ?3r dbo:ingredient ?inf.
+                   ?inf rdfs:label ?infn.
                    ?3r rdfs:label ?3rn.
                    filter not exists { ?inf rdf:type dbo:Cheese }
-                   FILTER( langMatches(lang(?3rn),"EN") &&  ?3rn=${input}).
+                   FILTER(langMatches(lang(?infn),"EN") && langMatches(lang(?3rn),"EN") &&  ?3rn=${input}).
             }
 }
 }
