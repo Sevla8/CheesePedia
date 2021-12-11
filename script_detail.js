@@ -452,7 +452,7 @@ function detailCountry(){
 	if (urlParams.has('country')) {
 		var input = decodeURIComponent(urlParams.get('country'));
 		var inputLabel = "\""+input+"\"@en";
-		console.log('Country:', input);
+		console.log('Country:', inputLabel);
 	}
 
 	var contenu_requete = `
@@ -514,7 +514,7 @@ function loadCountryCheeses() {
 		var inputLabel = decodeURIComponent(urlParams.get('country'));
 
 		inputLabel = "\""+inputLabel+"\"@en";
-		console.log('Detail of cheese:', inputLabel);
+		console.log('Detail of Country:', inputLabel);
 	}
 
 	var contenu_requete = `
@@ -655,9 +655,9 @@ function showRecipe(data) {
 	
 	console.log(data);
 	data.results.bindings.forEach((recipe) => {
-		document.getElementById("name").innerHTML = recipe.label.value;
-		document.getElementById("detail-block-left").innerHTML = recipe.abstract.value;
-		if (animal.thumbnail) {
+		document.getElementById("name").innerHTML = recipe.rn.value;
+		document.getElementById("detail-block-left").innerHTML = recipe.an.value;
+		if (recipe.thumbnail) {
 			document.getElementById("img-detail").src =  recipe.thumbnail.value;
 		}
 	})
