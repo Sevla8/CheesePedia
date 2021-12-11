@@ -174,7 +174,7 @@ function showResults(data) {
 	data.results.bindings.forEach((cheese) => {
 		result += '<td class="table-cell cell-content" id="' + cheese.label.value + '">';
 
-		result += '<a class="caseLink" href=detail_cheese.html?cheese=' + encodeURIComponent(cheese.label.value) + '><h3 class="name">' + cheese.label.value + '</h3>';
+		result += '<a class="caseLink" href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '><h3 class="name">' + cheese.label.value + '</h3>';
 
 		if (cheese.country) result += '<p class="country"><em>Country: </em>' + cheese.country.value + '</p>';
 
@@ -203,7 +203,7 @@ function showResults(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
 
-		result += '<p><a href=detail_cheese.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
+		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
 
 		result += '</a></td>';
 
@@ -348,14 +348,12 @@ function loadRecipe() {
 function showRecipes(data) {
 	console.log('Recipes from https://dbpedia.org/:', data);
 
+	let result = "";
 	if (data.results.bindings.length != 0) {
-		document.getElementById('recipesTitle').style.display = 'block';
+		result += "<h2>Recipes : </h2>" ;
 	}
-	else {
-		document.getElementById('recipesTitle').style.display = 'none';
-	}
-
-	let result = "<tr class='table-row'>";
+	
+	result+="<tr class='table-row'>";
 	data.results.bindings.forEach((recipe) => {
 		result += '<td class="table-cell cell-content" id="' + recipe.recipe_label.value + '">';
 
@@ -368,13 +366,13 @@ function showRecipes(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/recipe.png"\" target="_blank"></p>';
 		}
 
-		result += '<p><a href=detail_other.html?recipe=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
+		result += '<p><a href=detail.html?recipe=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
 
 		result += '</td>';
 	});
 	result += "</tr>";
 
-	document.getElementById('recipes').innerHTML = result;
+	document.getElementById('bottom').innerHTML = result;
 }
 
 function capitalizeFirstLetter(string) {
@@ -383,6 +381,20 @@ function capitalizeFirstLetter(string) {
 
 function showDetails(data) {
 	console.log('Detail from https://dbpedia.org/:', data);
+
+	var s = ` <img id="img-detail" src="ressources/defaultImg.png" onerror = "this.onerror=null;this.src='ressources/defaultImg.png';" alt="Image" >
+			<p class="det-col1">Country: </p>
+			<p class="det-col2" id="country">-</p>
+			<p class="det-col1">Certification: </p>
+			<p class="det-col2" id="certification">-</p>
+			<p class="det-col1">Pasteurized: </p>
+			<p class="det-col2" id="pasteurized">-</p>
+			<p class="det-col1">Texture: </p>
+			<p class="det-col2" id="texture">-</p>
+			<p class="det-col1">Milk Source: </p>
+			<p class="det-col2" id="milk">-</p>
+	`
+	document.getElementById("detail-block-right").innerHTML = s;
 
 	data.results.bindings.forEach((cheese) => {
 
@@ -410,25 +422,25 @@ function showDetails(data) {
 		//Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
 		////'<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>'
 		if (cheese.Goat.value == 1) {
-			milk += "<a href='detail_other.html?animal=Goat'/>Goat, ";
+			milk += "<a href='detail.html?animal=Goat'/>Goat, ";
 		}
 		if (cheese.Cow.value == 1) {
-			milk += "<a href='detail_other.html?animal=Cattle'/>Cow, ";
+			milk += "<a href='detail.html?animal=Cattle'/>Cow, ";
 		}
 		if (cheese.Sheep.value == 1) {
-			milk += "<a href='detail_other.html?animal=Sheep'/>Sheep, ";
+			milk += "<a href='detail.html?animal=Sheep'/>Sheep, ";
 		}
 		if (cheese.Buffalo.value == 1) {
-			milk += "<a href='detail_other.html?animal=Water_buffalo'/>Buffalo, ";
+			milk += "<a href='detail.html?animal=Water_buffalo'/>Buffalo, ";
 		}
 		if (cheese.Donkeys.value == 1) {
-			milk += "<a href='detail_other.html?animal=Donkey'/>Donkey, ";
+			milk += "<a href='detail.html?animal=Donkey'/>Donkey, ";
 		}
 		if (cheese.Yak.value == 1) {
-			milk += "<a href='detail_other.html?animal=Yak'/>Yak, ";
+			milk += "<a href='detail.html?animal=Yak'/>Yak, ";
 		}
 		if (cheese.Moose.value == 1) {
-			milk += "<a href='detail_other.html?animal=Moose'/>Moose, ";
+			milk += "<a href='detail.html?animal=Moose'/>Moose, ";
 		}
 		if (milk == "") {
 			milk="-";
@@ -559,7 +571,7 @@ function showCountries(data) {
 	data.results.bindings.forEach((cheese) => {
 
 		if(cheese.cn){
-			country += "<a href='detail_other.html?country="+cheese.cn.value+"'/>"+cheese.cn.value+", ";
+			country += "<a href='detail.html?country="+cheese.cn.value+"'/>"+cheese.cn.value+", ";
 		}
 	});
 
@@ -622,6 +634,26 @@ function parseCountries(data) {
 	});
 	document.getElementById("countryname").innerHTML = s;
 
+}
+
+function detail(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	if(urlParams.has('cheese')){
+		loadDetail();
+		loadCountry();
+	}
+	if (urlParams.has('animal')) {
+		detailAnimal();
+	}
+	if (urlParams.has('recipe')) {
+		detailRecipe();
+	}
+	if(urlParams.has('country')){
+		detailCountry();
+		loadCountryCheeses();
+	}
 }
 
 function detailOther(){
@@ -699,9 +731,10 @@ function detailRecipe(){
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	if (urlParams.has('recipe')) {
-		var input = decodeURIComponent(urlParams.get('recipe'));
+		var inputLabel = decodeURIComponent(urlParams.get('recipe'));
 
-		console.log('Recipe:', input);
+		input = "\""+inputLabel+"\"@en";
+		console.log('Recipe:', inputLabel);
 	}
 
 
@@ -887,7 +920,7 @@ function showCountryCheeses(data) {
 		else {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
-		result += '<p><a href=detail_cheese.html?cheese=' + encodeURIComponent(cheese.n.value) + '>More details</a></p>';
+		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.n.value) + '>More details</a></p>';
 		result += '</td>';
 	});
 	
@@ -899,6 +932,8 @@ function showCountryCheeses(data) {
 
 
 function showRecipe(data) {
+	
+	console.log(data);
 	data.results.bindings.forEach((recipe) => {
 		document.getElementById("name").innerHTML = recipe.label.value;
 		document.getElementById("detail-block-left").innerHTML = recipe.abstract.value;

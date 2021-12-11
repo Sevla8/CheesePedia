@@ -1,0 +1,46 @@
+<!-- Detail sur autre choses -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="Style.css">
+	<title>Cheeseek</title>
+</head>
+
+
+
+<body onload="detail();">
+
+
+<div id="detail-container">
+	<div id="detail-block">
+	
+		<div id="history-cheeseek">
+			<a id="link-history-img" href="javascript:history.go(-1)">
+				<img id="history-img" src="ressources/fleche1.png" alt="back">
+			</a>
+			<h1 id="name">-</h1>
+		</div>
+
+		<div id="detail-block-left">
+			-</div>
+			
+		<div id="detail-block-right">
+			<img id="img-detail" src="ressources/defaultImg.png" onerror = "this.onerror=null;this.src='ressources/defaultImg.png';" alt="Image" >
+
+		</div>
+		
+		<div id="detail-block-bottom">
+			<table id="bottom">
+			</table>
+		</div>
+		
+	</div>
+</div>
+<script src="script.js"></script>
+
+</body>
+</html>
