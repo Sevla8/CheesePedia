@@ -11,7 +11,7 @@ document.addEventListener('keypress', (event) => {
 // Affiche les filtres déjà sélectionnés
 if (sessionStorage.getItem("search") != "" && document.getElementById("searchTxt")) document.getElementById("searchTxt").value = sessionStorage.getItem("search");
 if (sessionStorage.getItem("certification") != "") document.getElementById("certificationFilters").value = sessionStorage.getItem("certification");
-if (sessionStorage.getItem("country") != "")document.getElementById("countryFilters").value = sessionStorage.getItem("country");
+if (sessionStorage.getItem("country") != "")document.getElementById("countryFilters").value = (sessionStorage.getItem("country")).replaceAll("_"," ");
 if (sessionStorage.getItem("texture") != "") document.getElementById("textureFilters").value = sessionStorage.getItem("texture");
 if (sessionStorage.getItem("source") != "") document.getElementById("sourceFilters").value = sessionStorage.getItem("source");
 if (sessionStorage.getItem("pasteurized") != "") document.getElementById("pasteurizedFilters").value = sessionStorage.getItem("pasteurized");
@@ -28,6 +28,7 @@ function search() {
 
 	let countryTxt = document.getElementById("countryFilters").value;
 	countryTxt = encodeURIComponent(countryTxt);
+	countryTxt = countryTxt.replaceAll("%20","_");
 	sessionStorage.setItem("country", countryTxt);
 
 	let textureTxt = document.getElementById("textureFilters").value;

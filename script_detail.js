@@ -32,7 +32,8 @@ function loadDetail() {
 		console.log('Detail of cheese:', inputLabel);
 	}
 
-	var contenu_requete = `
+	//TODO : ADD THE FIXED PAYS PAR FROMAGE TO THIS BIG REQUEST
+	var contenu_requete = `  
 					SELECT * WHERE
 			{ 
 			{
