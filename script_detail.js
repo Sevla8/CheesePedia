@@ -143,25 +143,25 @@ function showDetails(data) {
 		//Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
 		////'<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>'
 		if (cheese.Goat.value == 1) {
-			milk += "<a href='detail.html?animal=Goat'/>Goat, ";
+			milk += "<a href='detail.html?animal=Goat'/>Goat</a>, ";
 		}
 		if (cheese.Cow.value == 1) {
-			milk += "<a href='detail.html?animal=Cattle'/>Cow, ";
+			milk += "<a href='detail.html?animal=Cattle'/>Cow</a>, ";
 		}
 		if (cheese.Sheep.value == 1) {
-			milk += "<a href='detail.html?animal=Sheep'/>Sheep, ";
+			milk += "<a href='detail.html?animal=Sheep'/>Sheep</a>, ";
 		}
 		if (cheese.Buffalo.value == 1) {
-			milk += "<a href='detail.html?animal=Water_buffalo'/>Buffalo, ";
+			milk += "<a href='detail.html?animal=Water_buffalo'/>Buffalo</a>, ";
 		}
 		if (cheese.Donkeys.value == 1) {
-			milk += "<a href='detail.html?animal=Donkey'/>Donkey, ";
+			milk += "<a href='detail.html?animal=Donkey'/>Donkey</a>, ";
 		}
 		if (cheese.Yak.value == 1) {
-			milk += "<a href='detail.html?animal=Yak'/>Yak, ";
+			milk += "<a href='detail.html?animal=Yak'/>Yak</a>, ";
 		}
 		if (cheese.Moose.value == 1) {
-			milk += "<a href='detail.html?animal=Moose'/>Moose, ";
+			milk += "<a href='detail.html?animal=Moose'/>Moose</a>, ";
 		}
 		if (milk == "") {
 			milk="-";
@@ -593,45 +593,52 @@ function detailRecipe(){
 
 	var contenu_requete = `
 		SELECT * WHERE
-	{ 
-	{
-		 select distinct ?rn ?thumbnail ?cn ?an 
-				 where {
-					  ?r dbo:ingredient [].
-					  ?r rdfs:label ?rn.
-					  ?r dbp:country ?c.
-					  ?c rdfs:label ?cn.
-					  OPTIONAL {?r dbo:thumbnail ?thumbnail}.
-					  FILTER( langMatches(lang(?rn),"EN") && langMatches(lang(?cn),"EN")  && 
-					  ?rn=${input} ).
-					 ?r dbo:abstract ?an.
-					 FILTER(langMatches(lang(?an),"EN")).
-			  }
-	}
-	UNION
-	{
-	select distinct ?if
-				 where {
-					  ?if a dbo:Cheese.
-					   ?if dbo:abstract ?a.
-					   ?if rdfs:label ?n.
-					   ?2r dbo:ingredient ?if.
-					   ?2r rdfs:label ?2rn.
-					   FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?2rn),"EN") &&  langMatches(lang(?a),"EN") && 
-					  REGEX(?a ,"[Cc]heese") && ?2rn=${input} ).
-				}
-	}
-	UNION
-	{
-	select distinct ?inf
-				 where {
-					   ?3r dbo:ingredient ?inf.
-					   ?3r rdfs:label ?3rn.
-					   filter not exists { ?inf rdf:type dbo:Cheese }
-					   FILTER( langMatches(lang(?3rn),"EN") &&  ?3rn=${input} ).
-				}
-	}
-	}
+		{ 
+		{
+			 select distinct ?rn ?thumbnail ?cn ?an 
+					 where {
+						  ?r dbo:ingredient [].
+						  ?r rdfs:label ?rn.
+						  
+						  {
+						  ?r dbp:country ?c.
+						  ?c rdfs:label ?cn.
+						  FILTER(langMatches(lang(?cn),"EN") ).
+						  }UNION{
+						  ?r dbp:country ?cn.
+						  FILTER(langMatches(lang(?cn),"EN") ).
+						  }
+						  OPTIONAL {?r dbo:thumbnail ?thumbnail}.
+						  FILTER( langMatches(lang(?rn),"EN") && ?rn=${input} ).
+						 ?r dbo:abstract ?an.
+						 FILTER(langMatches(lang(?an),"EN")).
+				  }
+		}
+		UNION
+		{
+		select distinct ?n
+					 where {
+						  ?if a dbo:Cheese.
+						   ?if dbo:abstract ?a.
+						   ?if rdfs:label ?n.
+						   ?2r dbo:ingredient ?if.
+						   ?2r rdfs:label ?2rn.
+						   FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?2rn),"EN") &&  langMatches(lang(?a),"EN") && 
+						  REGEX(?a ,"[Cc]heese") && ?2rn=${input}).
+					}
+		}
+		UNION
+		{
+		select distinct ?infn
+					 where {
+						   ?3r dbo:ingredient ?inf.
+						   ?inf rdfs:label ?infn.
+						   ?3r rdfs:label ?3rn.
+						   filter not exists { ?inf rdf:type dbo:Cheese }
+						   FILTER(langMatches(lang(?infn),"EN") && langMatches(lang(?3rn),"EN") &&  ?3rn=${input}).
+					}
+		}
+		}
 	`;
 
 	// Encodage de l'URL à transmettre à DBPedia
@@ -654,12 +661,35 @@ function detailRecipe(){
 function showRecipe(data) {
 	
 	console.log(data);
+	var s= ` <img id="img-detail" src="ressources/defaultImg.png" onerror = "this.onerror=null;this.src='ressources/defaultImg.png';" alt="Image" >
+			<p class="det-col1">Ingredients: </p>
+			<p class="det-col2" id="ingredients">-</p>
+			`
+	var ingredients ="";
+	document.getElementById("detail-block-right").innerHTML = s;
 	data.results.bindings.forEach((recipe) => {
-		document.getElementById("name").innerHTML = recipe.rn.value;
-		document.getElementById("detail-block-left").innerHTML = recipe.an.value;
+		if (recipe.rn) {
+			document.getElementById("name").innerHTML = recipe.rn.value;
+		}
+		if(recipe.an){
+			document.getElementById("detail-block-left").innerHTML = recipe.an.value;
+		}
 		if (recipe.thumbnail) {
 			document.getElementById("img-detail").src =  recipe.thumbnail.value;
 		}
+		if(recipe.n){
+			ingredients+= "<a href='detail.html?cheese="+recipe.n.value+"'/>"+recipe.n.value+"</a>, ";
+		}
+		if(recipe.infn){
+			ingredients+= recipe.infn.value+", ";
+		}
 	})
+	if (ingredients=="") {
+			ingredients="-";
+	}else{
+		ingredients = ingredients.substring(0, ingredients.length - 2);
+	}
+	document.getElementById("ingredients").innerHTML =  ingredients;
+	
 
 }
