@@ -32,9 +32,9 @@ function loadDetail() {
 		console.log('Detail of cheese:', inputLabel);
 	}
 
-	//TODO : ADD THE FIXED PAYS PAR FROMAGE TO THIS BIG REQUEST
+
 	var contenu_requete = `  
-					SELECT * WHERE
+								SELECT * WHERE
 			{ 
 			{
 				 select ?f ?a ?n ?thumbnail  sum(if(regex(?c,"A.*O.*C"),1,0)) as ?AOC
@@ -97,16 +97,24 @@ function loadDetail() {
 			}
 			UNION
 			{
-			select distinct ?cn3
-							where {
-				?3f a dbo:Cheese.
-				?3f dbo:abstract ?3a.
-				?3f rdfs:label ?3n.
-				{?3f dbo:country ?3c}UNION
-				{?3f dbp:country ?3c}
-				?3c rdfs:label ?cn3.
 
-				FILTER(langMatches(lang(?3n),"EN") && langMatches(lang(?3a),"EN")  && langMatches(lang(?cn3),"EN") && REGEX(?3a ,"[Cc]heese") && ?3n=${inputLabel} ).
+			select distinct ?c2 ?cn 
+							where {
+				?f1 a dbo:Cheese.
+				?f1 dbo:abstract ?a2.
+				?f1 rdfs:label ?n1.
+				
+					{
+					{?f1 dbo:country ?c2}UNION
+				{?f1 dbp:country ?c2}
+				?c2 rdfs:label ?cn.
+					FILTER(langMatches(lang(?cn),"EN"))
+					}UNION{
+					{?f1 dbo:country ?c2}UNION
+				{?f1 dbp:country ?c2}
+					FILTER(langMatches(lang(?c2),"EN"))
+					}
+				FILTER(langMatches(lang(?n1),"EN") && langMatches(lang(?a2),"EN") && REGEX(?a2 ,"[Cc]heese") && ?n1=${inputLabel}).
 				}
 
 			}
@@ -253,8 +261,8 @@ function showDetails(data) {
 		
 		
 		
-		if(cheese.cn3){
-			country+= "<a href='detail.html?country="+cheese.cn3.value+"'/>"+cheese.cn3.value+"</a>, ";
+		if(cheese.c2){
+			country+= "<a href='detail.html?country="+cheese.c2.value+"'/>"+cheese.c2.value+"</a>, ";
 		}
 	
 
