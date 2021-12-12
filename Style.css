@@ -245,6 +245,15 @@ body {
 
 #loupeLogo:hover{
 	opacity:0.75;
+	animation: jello;
+	animation-duration: 1s;
+	cursor: pointer;
+}
+#loupeLogo2:hover{
+	opacity:0.75;
+	animation: jello;
+	animation-duration: 1s;
+	cursor: pointer;
 }
 #loupeLogo:active{
 	opacity:0.5;
