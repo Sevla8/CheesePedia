@@ -1,4 +1,4 @@
-<!-- Detail sur autre choses -->
+<!-- Detail sur un fromage -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,12 +12,11 @@
 
 
 
-<body onload="detail();">
+<body onload="loadDetail(); loadCountry();">
 
 
 <div id="detail-container">
 	<div id="detail-block">
-	
 		<div id="history-cheeseek">
 			<a id="link-history-img" href="javascript:history.go(-1)">
 				<img id="history-img" src="ressources/fleche1.png" alt="back">
@@ -25,22 +24,30 @@
 			<h1 id="name">-</h1>
 		</div>
 
-		<div id="detail-block-left">
-			-</div>
-			
+		<div id="detail-block-left">-</div>
+
 		<div id="detail-block-right">
 			<img id="img-detail" src="ressources/defaultImg.png" onerror = "this.onerror=null;this.src='ressources/defaultImg.png';" alt="Image" >
-
+			<p class="det-col1">Country: </p>
+			<p class="det-col2" id="country">-</p>
+			<p class="det-col1">Certification: </p>
+			<p class="det-col2" id="certification">-</p>
+			<p class="det-col1">Pasteurized: </p>
+			<p class="det-col2" id="pasteurized">-</p>
+			<p class="det-col1">Texture: </p>
+			<p class="det-col2" id="texture">-</p>
+			<p class="det-col1">Milk Source: </p>
+			<p class="det-col2" id="milk">-</p>
 		</div>
-		
+
+		<h2 id=recipesTitle>Recipes</h2>
 		<div id="detail-block-bottom">
-			<table id="bottom">
+			<table id="recipes">
 			</table>
 		</div>
-		
 	</div>
 </div>
-<script src="script_detail.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>

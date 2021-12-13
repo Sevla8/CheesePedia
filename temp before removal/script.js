@@ -9,7 +9,7 @@ document.addEventListener('keypress', (event) => {
 }, false);
 
 // Affiche les filtres déjà sélectionnés
-if (sessionStorage.getItem("search") != "") document.getElementById("searchTxt").value = sessionStorage.getItem("search");
+if (sessionStorage.getItem("search") != "" && document.getElementById("searchTxt")) document.getElementById("searchTxt").value = sessionStorage.getItem("search");
 if (sessionStorage.getItem("certification") != "") document.getElementById("certificationFilters").value = sessionStorage.getItem("certification");
 if (sessionStorage.getItem("country") != "")document.getElementById("countryFilters").value = sessionStorage.getItem("country");
 if (sessionStorage.getItem("texture") != "") document.getElementById("textureFilters").value = sessionStorage.getItem("texture");
@@ -204,7 +204,7 @@ function showResults(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
 		}
 
-		//result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
+		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>';
 
 		result += '</a></td>';
 
@@ -354,7 +354,12 @@ function loadRecipe() {
 function showRecipes(data) {
 	console.log('Recipes from https://dbpedia.org/:', data);
 
-	let result = "<tr class='table-row'>";
+	let result = "";
+	if (data.results.bindings.length != 0) {
+		result += "<h2>Recipes : </h2>" ;
+	}
+	
+	result+="<tr class='table-row'>";
 	data.results.bindings.forEach((recipe) => {
 		result += '<td class="table-cell cell-content" id="' + recipe.recipe_label.value + '">';
 
@@ -367,13 +372,13 @@ function showRecipes(data) {
 			result += '<p class="thumbnail"><img class="img-result" src="ressources/recipe.png"\" target="_blank"></p>';
 		}
 
-		// result += '<p><a href=detail.html?cheese=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
+		result += '<p><a href=detail.html?recipe=' + encodeURIComponent(recipe.recipe_label.value) + '>More details</a></p>';
 
 		result += '</td>';
 	});
 	result += "</tr>";
 
-	document.getElementById('recipes').innerHTML = result;
+	document.getElementById('bottom').innerHTML = result;
 }
 
 function capitalizeFirstLetter(string) {
@@ -382,6 +387,20 @@ function capitalizeFirstLetter(string) {
 
 function showDetails(data) {
 	console.log('Detail from https://dbpedia.org/:', data);
+
+	var s = ` <img id="img-detail" src="ressources/defaultImg.png" onerror = "this.onerror=null;this.src='ressources/defaultImg.png';" alt="Image" >
+			<p class="det-col1">Country: </p>
+			<p class="det-col2" id="country">-</p>
+			<p class="det-col1">Certification: </p>
+			<p class="det-col2" id="certification">-</p>
+			<p class="det-col1">Pasteurized: </p>
+			<p class="det-col2" id="pasteurized">-</p>
+			<p class="det-col1">Texture: </p>
+			<p class="det-col2" id="texture">-</p>
+			<p class="det-col1">Milk Source: </p>
+			<p class="det-col2" id="milk">-</p>
+	`
+	document.getElementById("detail-block-right").innerHTML = s;
 
 	data.results.bindings.forEach((cheese) => {
 
@@ -406,26 +425,28 @@ function showDetails(data) {
 		}
 
 		var milk = "";
+		//Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
+		////'<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.label.value) + '>More details</a></p>'
 		if (cheese.Goat.value == 1) {
-			milk += "Goat, ";
+			milk += "<a href='detail.html?animal=Goat'/>Goat, ";
 		}
 		if (cheese.Cow.value == 1) {
-			milk += "Cow, ";
+			milk += "<a href='detail.html?animal=Cattle'/>Cow, ";
 		}
 		if (cheese.Sheep.value == 1) {
-			milk += "Sheep, ";
+			milk += "<a href='detail.html?animal=Sheep'/>Sheep, ";
 		}
 		if (cheese.Buffalo.value == 1) {
-			milk += "Buffalo, ";
+			milk += "<a href='detail.html?animal=Water_buffalo'/>Buffalo, ";
 		}
 		if (cheese.Donkeys.value == 1) {
-			milk += "Donkeys, ";
+			milk += "<a href='detail.html?animal=Donkey'/>Donkey, ";
 		}
 		if (cheese.Yak.value == 1) {
-			milk += "Yak, ";
+			milk += "<a href='detail.html?animal=Yak'/>Yak, ";
 		}
 		if (cheese.Moose.value == 1) {
-			milk += "Moose, ";
+			milk += "<a href='detail.html?animal=Moose'/>Moose, ";
 		}
 		if (milk == "") {
 			milk="-";
@@ -556,7 +577,7 @@ function showCountries(data) {
 	data.results.bindings.forEach((cheese) => {
 
 		if(cheese.cn){
-			country += cheese.cn.value+", ";
+			country += "<a href='detail.html?country="+cheese.cn.value+"'/>"+cheese.cn.value+", ";
 		}
 	});
 
@@ -572,16 +593,16 @@ function showCountries(data) {
 }
 
 function addCountryFilter(){
-	
+
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 
 	var contenu_requete = `
-					select distinct ?cn 
+					select distinct ?cn
 					 where {
 		?c a dbo:Country.
 		?f a dbo:Cheese.
-		?f dbo:abstract ?a. 
+		?f dbo:abstract ?a.
 		?f rdfs:label ?n.
 		?c rdfs:label ?cn.
 		{
@@ -607,7 +628,7 @@ function addCountryFilter(){
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-	
+
 }
 
 function parseCountries(data) {
@@ -618,8 +639,315 @@ function parseCountries(data) {
 		s += "<option value=\""+country.cn.value+"\">";
 	});
 	document.getElementById("countryname").innerHTML = s;
-	
+
 }
 
+function detail(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	if(urlParams.has('cheese')){
+		loadDetail();
+		loadCountry();
+	}
+	if (urlParams.has('animal')) {
+		detailAnimal();
+	}
+	if (urlParams.has('recipe')) {
+		detailRecipe();
+	}
+	if(urlParams.has('country')){
+		detailCountry();
+		loadCountryCheeses();
+	}
+}
+
+function detailOther(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	if (urlParams.has('animal')) {
+		detailAnimal();
+	}
+	if (urlParams.has('recipe')) {
+		detailRecipe();
+	}
+	if(urlParams.has('country')){
+		detailCountry();
+		loadCountryCheeses();
+	}
+}
+
+function detailAnimal(){
+
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('animal')) {
+		var input = decodeURIComponent(urlParams.get('animal'));
+
+		//Valeurs possible de input: Cattle | Water_buffalo | Goat | Sheep | Donkey | Yak | Moose
+		console.log('Animal:', input);
+	}
+
+	var contenu_requete = `
+					select ?label, ?abstract, ?thumbnail
+		where{
+			dbr:${input} rdfs:label ?label;
+			dbo:abstract ?abstract;
+			dbo:thumbnail ?thumbnail.
+			FILTER(
+				langMatches(lang(?abstract),"EN") &&
+				langMatches(lang(?label),"EN")
+			)
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showAnimal(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function showAnimal(data) {
+	console.log("showanimal called");
+
+
+	data.results.bindings.forEach((animal) => {
+		document.getElementById("name").innerHTML = animal.label.value;
+		document.getElementById("detail-block-left").innerHTML = animal.abstract.value;
+		if (animal.thumbnail) {
+			document.getElementById("img-detail").src =  animal.thumbnail.value;
+		}
+	})
+
+}
+
+function detailRecipe(){
+
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('recipe')) {
+		var inputLabel = decodeURIComponent(urlParams.get('recipe'));
+
+		input = "\""+inputLabel+"\"@en";
+		console.log('Recipe:', inputLabel);
+	}
+
+
+	var contenu_requete = `
+		SELECT * WHERE
+	{ 
+	{
+		 select distinct ?rn ?thumbnail ?cn ?an 
+				 where {
+					  ?r dbo:ingredient [].
+					  ?r rdfs:label ?rn.
+					  ?r dbp:country ?c.
+					  ?c rdfs:label ?cn.
+					  OPTIONAL {?r dbo:thumbnail ?thumbnail}.
+					  FILTER( langMatches(lang(?rn),"EN") && langMatches(lang(?cn),"EN")  && 
+					  ?rn=${input} ).
+					 ?r dbo:abstract ?an.
+					 FILTER(langMatches(lang(?an),"EN")).
+			  }
+	}
+	UNION
+	{
+	select distinct ?if
+				 where {
+					  ?if a dbo:Cheese.
+					   ?if dbo:abstract ?a.
+					   ?if rdfs:label ?n.
+					   ?2r dbo:ingredient ?if.
+					   ?2r rdfs:label ?2rn.
+					   FILTER(langMatches(lang(?n),"EN") && langMatches(lang(?2rn),"EN") &&  langMatches(lang(?a),"EN") && 
+					  REGEX(?a ,"[Cc]heese") && ?2rn=${input} ).
+				}
+	}
+	UNION
+	{
+	select distinct ?inf
+				 where {
+					   ?3r dbo:ingredient ?inf.
+					   ?3r rdfs:label ?3rn.
+					   filter not exists { ?inf rdf:type dbo:Cheese }
+					   FILTER( langMatches(lang(?3rn),"EN") &&  ?3rn=${input} ).
+				}
+	}
+	}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showRecipe(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+
+function detailCountry(){
+
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('country')) {
+		var input = decodeURIComponent(urlParams.get('country'));
+		var inputLabel = "\""+input+"\"@en";
+		console.log('Country:', input);
+	}
+
+	var contenu_requete = `
+					select distinct ?cn ?t ?d ?capitalname
+             where {
+			?c a dbo:Country.
+			?c rdfs:label ?cn.
+			?c rdfs:comment ?d.
+			?c dbp:capital ?capital.
+			?capital rdfs:label ?capitalname.
+			OPTIONAL{?c dbo:thumbnail ?t}.
+			FILTER(langMatches(lang(?cn),"EN")  &&  langMatches(lang(?d),"EN") && langMatches(lang(?capitalname),"EN") && ?cn=${inputLabel} ).
+			}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showDetailCountry(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function showDetailCountry(data) {
+
+	data.results.bindings.forEach((country) => {
+		document.getElementById("name").innerHTML = country.cn.value;
+		document.getElementById("detail-block-left").innerHTML = country.d.value;
+		var colRight="";
+		if (country.t) {
+			colRight += '<p class="thumbnail"><img class="img-result" src="' + country.t.value + '" alt="' + country.cn.value + '" onerror="this.onerror=null; this.src=\'ressources/defaultImg.png\'" target="_blank"></p>';
+		}
+		else {
+			colRight += '<p class="thumbnail"><img class="img-result" src="ressources/flag.png"\" target="_blank"></p>';
+		}
+		colRight+="<p class='det-col2' id='capital'>Capital : "+country.capitalname.value+"</p>";
+
+		document.getElementById("detail-block-right").innerHTML = colRight;
+
+		console.log(colRight);
+	})
+
+}
+
+
+function loadCountryCheeses() {
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	if (urlParams.has('country')) {
+		var inputLabel = decodeURIComponent(urlParams.get('country'));
+
+		inputLabel = "\""+inputLabel+"\"@en";
+		console.log('Detail of cheese:', inputLabel);
+	}
+
+	var contenu_requete = `
+				select distinct ?n ?t
+					 where {
+		?c a dbo:Country.
+		?f a dbo:Cheese.
+		?f dbo:abstract ?a.
+		?f rdfs:label ?n.
+		?c rdfs:label ?cn.
+		{
+		?f dbp:country ?c.
+		}UNION{
+		?f dbp:country ?cn.
+		}
+		OPTIONAL {?f dbo:thumbnail ?t}
+		FILTER(langMatches(lang(?cn),"EN") &&langMatches(lang(?n),"EN") && langMatches(lang(?a),"EN") && REGEX(?a ,"[Cc]heese") && ?cn=${inputLabel} ).
+		}
+	`;
+
+	// Encodage de l'URL à transmettre à DBPedia
+    var url_base = "http://dbpedia.org/sparql";
+    var url = url_base + "?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+
+    // Requête HTTP et affichage des résultats
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.responseText);
+            showCountryCheeses(results);
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function showCountryCheeses(data) {
+	console.log('Recipes from https://dbpedia.org/:', data);
+
+
+	let result = "<h2>Cheeses : </h2>" ;
+	result+="<tr class='table-row'>";
+	data.results.bindings.forEach((cheese) => {
+		result += '<td class="table-cell cell-content" id="' + cheese.n.value + '">';
+
+		result += '<h3 class="name">' + cheese.n.value + '</h3>';
+
+		if (cheese.t) {
+			result += '<p class="thumbnail"><img class="img-result" src="' + cheese.t.value + '" alt="' + cheese.n.value + '" onerror="this.onerror=null; this.src=\'ressources/defaultImg.png\'" target="_blank"></p>';
+		}
+		else {
+			result += '<p class="thumbnail"><img class="img-result" src="ressources/defaultImg.png"\" target="_blank"></p>';
+		}
+		result += '<p><a href=detail.html?cheese=' + encodeURIComponent(cheese.n.value) + '>More details</a></p>';
+		result += '</td>';
+	});
+	
+	result += "</tr>";
+
+	document.getElementById('bottom').innerHTML = result;
+}
+
+
+
+function showRecipe(data) {
+	
+	console.log(data);
+	data.results.bindings.forEach((recipe) => {
+		document.getElementById("name").innerHTML = recipe.label.value;
+		document.getElementById("detail-block-left").innerHTML = recipe.abstract.value;
+		if (animal.thumbnail) {
+			document.getElementById("img-detail").src =  recipe.thumbnail.value;
+		}
+	})
+
+}
 
 
