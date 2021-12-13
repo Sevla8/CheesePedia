@@ -168,7 +168,13 @@ body {
 #link-history-img{
 	float: left;
 }
-
+#milk a, #country a{
+	text-decoration: none;
+	
+}
+#milk a:hover, #country a:hover{
+	color: #FF7F50;
+}
 #search-cheeseek{
 	margin: 7% 0 0 5%;
 	vertical-align:baseline;
@@ -214,6 +220,8 @@ body {
 	background-color: var(--main-res-color);
 	height:78vh;
 	top: 25%;
+	border-radius: 0.5em;
+	
 }
 #noResult p{
 	font: bold 2em "Bodoni MT", sans-serif;
