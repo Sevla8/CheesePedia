@@ -11,7 +11,10 @@ body {
 }
 #main-div{
 	background-color: var(--main-res-color);
+	background-image: url(ressources/doodle.png);
+	background-size: 30%;
 	width:100%;
+
 }
 #detail-block-left{
 	display: inline-block;
@@ -65,7 +68,7 @@ body {
 	background-color: #FFFFFF;
 }
 #header{
-	height: 80px;
+	height: 11%;
 	width: 100%;
 	background-color: #FFFFFF;
 	background-image: url(ressources/cheeseBG2.png);
@@ -206,6 +209,23 @@ body {
 	background-color: var(--main-res-color);
 	width: 25%;
 }
+#noResult{
+	text-align: center;
+	background-color: var(--main-res-color);
+	height:78vh;
+	top: 25%;
+}
+#noResult p{
+	font: bold 2em "Bodoni MT", sans-serif;
+	color: var(--main-orange);
+	margin-top: 0;
+
+}
+#noResult img{
+	border-radius: 5%;
+
+}
+
 .caseLink{
 	text-decoration:none;
 	color: var(--main-orange);
@@ -225,6 +245,15 @@ body {
 
 #loupeLogo:hover{
 	opacity:0.75;
+	animation: jello;
+	animation-duration: 1s;
+	cursor: pointer;
+}
+#loupeLogo2:hover{
+	opacity:0.75;
+	animation: jello;
+	animation-duration: 1s;
+	cursor: pointer;
 }
 #loupeLogo:active{
 	opacity:0.5;
