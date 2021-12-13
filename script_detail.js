@@ -261,8 +261,8 @@ function showDetails(data) {
 		
 		
 		
-		if(cheese.c2){
-			country+= "<a href='detail.html?country="+cheese.c2.value+"'/>"+cheese.c2.value+"</a>, ";
+		if(cheese.cn){
+			country+= "<a href='detail.html?country="+cheese.cn.value+"'/>"+cheese.cn.value+"</a>, ";
 		}
 	
 
